@@ -10,7 +10,7 @@ class Ingredient(models.Model):
         max_length=256,
         db_index=True,
     )
-    measurement_unit = models.TextField(max_length=20)
+    measurement_unit = models.CharField(max_length=20)
 
     def __str__(self):
         return self.name
@@ -127,12 +127,11 @@ class Favorited(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        # related_name='user'
     )
     reciepe = models.ForeignKey(
         Reciepe,
         on_delete=models.CASCADE,
-        # related_name='favorite'
+        related_name='favorite'
     )
 
     class Meta:
@@ -148,12 +147,11 @@ class Shoping(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        # related_name='user'
     )
     reciepe = models.ForeignKey(
         Reciepe,
         on_delete=models.CASCADE,
-        # related_name='shopping'
+        related_name='shopping'
     )
 
     class Meta:
@@ -165,22 +163,3 @@ class Shoping(models.Model):
         ]
 
 
-class Subscribe(models.Model):
-    user = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='follower'
-    )
-    author = models.ForeignKey(
-        User,
-        on_delete=models.CASCADE,
-        related_name='author'
-    )
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=['user', 'author'],
-                name='subscription',
-            )
-        ]

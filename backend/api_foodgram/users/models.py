@@ -23,3 +23,24 @@ class User(AbstractUser):
         verbose_name='Last name',
         max_length=150,
     )
+
+
+class Subscribe(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='followers'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        # related_name='followings'
+    )
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user', 'author'],
+                name='subscription',
+            )
+        ]
