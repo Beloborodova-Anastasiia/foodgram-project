@@ -64,7 +64,7 @@ class Recipe(models.Model):
     image = models.ImageField(
         upload_to='recipes/',
     ) 
-    name = models.TextField(max_length=200)
+    name = models.CharField(max_length=200)
     text = models.TextField()
     cooking_time = models.IntegerField(
         validators=(MinValueValidator(1),),
@@ -77,6 +77,9 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.name
+
+    # def in_favorite(self, obj):
+    #     return obj.favorite.count()
 
 
 class IngredientRecipe(models.Model):

@@ -1,6 +1,8 @@
+from dataclasses import field
 from django.contrib import admin
 
 from .models import Ingredient, IngredientRecipe, Recipe, Tag, TagRecipe
+from users.models import Subscribe
 
 
 class IngredientsInline(admin.TabularInline):
@@ -12,7 +14,7 @@ class TagsInline(admin.TabularInline):
     model = TagRecipe
     extra = 1
 
-    
+
 class IngredientAdmin(admin.ModelAdmin):
     list_display = ('pk','name','measurement_unit',)
     list_filter = ('name',)
@@ -28,26 +30,21 @@ class TagAdmin(admin.ModelAdmin):
     search_fields = ('name', 'slug',)
 
 class RecipeAdmin(admin.ModelAdmin):
-    # fields = (
-    #     'author',
-    #     'name',
-    #     # 'in_favorite',
-    #     'text',
-    #     'cooking_time',
-    # )
     list_display = (
         'pk',
         'author',
         'name',
+        'in_favorite',
     )
     list_filter = ('name', 'author', 'tags')
     search_fields = ('name', 'author', 'tags')
     empty_value_display = '-empty-'
     date_hierarchy = 'pub_date'
     inlines = (IngredientsInline, TagsInline,)
+    field = ('in_favorite',)
 
-    # def in_favorite(self, obj):
-    #     return obj.favorite.count()
+    def in_favorite(self, obj):
+        return obj.favorite.count()
 
 
 
