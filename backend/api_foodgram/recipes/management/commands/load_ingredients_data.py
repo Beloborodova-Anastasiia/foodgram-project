@@ -3,7 +3,7 @@ import readline
 
 from django.core.management import BaseCommand
 from django.shortcuts import get_object_or_404
-from reciepes.models import Ingredient
+from recipes.models import Ingredient
 
 ALREDY_LOADED_ERROR_MESSAGE = """
 If you need to reload the child data from the CSV file,

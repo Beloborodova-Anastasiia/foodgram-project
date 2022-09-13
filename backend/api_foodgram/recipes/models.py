@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib import admin
 from django.core.validators import MinValueValidator, RegexValidator
 
 from users.models import User
@@ -46,22 +47,22 @@ class Tag(models.Model):
         return self.name
 
 
-class Reciepe(models.Model):
+class Recipe(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='reciepes',
+        related_name='recipes',
     )
     ingredients = models.ManyToManyField(
         Ingredient,
-        through='IngredientReciepe',
+        through='IngredientRecipe',
     )
     tags = models.ManyToManyField(
         Tag,
-        through='TagReciepe',
+        through='TagRecipe',
     )
     image = models.ImageField(
-        upload_to='reciepes/',
+        upload_to='recipes/',
     ) 
     name = models.TextField(max_length=200)
     text = models.TextField()
@@ -77,16 +78,17 @@ class Reciepe(models.Model):
     def __str__(self):
         return self.name
 
-class IngredientReciepe(models.Model):
+
+class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
         # related_name='ingredient',
     )
-    reciepe = models.ForeignKey(
-        Reciepe,
+    recipe = models.ForeignKey(
+        Recipe,
         on_delete=models.CASCADE,
-        # related_name='reciepe'
+        # related_name='recipe'
     )
     amount = models.FloatField(
         validators=(MinValueValidator(0),),
@@ -96,29 +98,29 @@ class IngredientReciepe(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['ingredient', 'reciepe'],
-                name='unique_ingredient_reciepe',
+                fields=['ingredient', 'recipe'],
+                name='unique_ingredient_recipe',
             )
         ]
 
 
-class TagReciepe(models.Model):
+class TagRecipe(models.Model):
     tag = models.ForeignKey(
         Tag,
         on_delete=models.CASCADE,
         # related_name='tag',
     )
-    reciepe = models.ForeignKey(
-        Reciepe,
+    recipe = models.ForeignKey(
+        Recipe,
         on_delete=models.CASCADE,
-        # related_name='reciepe'
+        # related_name='recipe'
     )
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['tag', 'reciepe'],
-                name='unique_tag_reciepe',
+                fields=['tag', 'recipe'],
+                name='unique_tag_recipe',
             )
         ]
 
@@ -128,8 +130,8 @@ class Favorited(models.Model):
         User,
         on_delete=models.CASCADE,
     )
-    reciepe = models.ForeignKey(
-        Reciepe,
+    recipe = models.ForeignKey(
+        Recipe,
         on_delete=models.CASCADE,
         related_name='favorite'
     )
@@ -137,8 +139,8 @@ class Favorited(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'reciepe'],
-                name='unique_favorite_reciepe',
+                fields=['user', 'recipe'],
+                name='unique_favorite_recipe',
             )
         ]
 
@@ -148,8 +150,8 @@ class Shoping(models.Model):
         User,
         on_delete=models.CASCADE,
     )
-    reciepe = models.ForeignKey(
-        Reciepe,
+    recipe = models.ForeignKey(
+        Recipe,
         on_delete=models.CASCADE,
         related_name='shopping'
     )
@@ -157,8 +159,8 @@ class Shoping(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'reciepe'],
-                name='unique_shoping_reciepe',
+                fields=['user', 'recipe'],
+                name='unique_shoping_recipe',
             )
         ]
 
