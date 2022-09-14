@@ -1,9 +1,8 @@
 from csv import DictReader
-import readline
 
 from django.core.management import BaseCommand
-from django.shortcuts import get_object_or_404
 from recipes.models import Ingredient
+from api_foodgram.constants import PATH_TO_DATA
 
 ALREDY_LOADED_ERROR_MESSAGE = """
 If you need to reload the child data from the CSV file,
@@ -27,27 +26,13 @@ class Command(BaseCommand):
     help = "Loads data from .csv files"
 
     def handle(self, *args, **options):
-
         if check_not_empty_base(Ingredient):
-            while True:
-                try:
-                    file = input('Enter path to csv file:\n')
-                    ingredients = open(file)
-                except FileNotFoundError:
-                    print('No such file or directory')
-                else:
-                    break
-
-            while True:
-                data = ingredients.readline()
-                if data != '':
-                    data = data.replace('\n', '')
-                    data_list = data.split(',')
-                    ingredient = Ingredient(
-                        name=data_list[0],
-                        measurement_unit=data_list[1],
-                    )
-                    ingredient.save()
-                else:
-                    break
-
+            for row in DictReader(
+                open(PATH_TO_DATA),
+                fieldnames=['name', 'measurement_unit']
+            ):
+                ingredient = Ingredient(
+                    name=row['name'],
+                    measurement_unit=row['measurement_unit'],
+                )
+                ingredient.save()

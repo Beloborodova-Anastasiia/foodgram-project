@@ -1,9 +1,7 @@
 from django.db import models
-from django.contrib import admin
 from django.core.validators import MinValueValidator, RegexValidator
 
 from users.models import User
-
 
 
 class Ingredient(models.Model):
@@ -15,6 +13,7 @@ class Ingredient(models.Model):
 
     def __str__(self):
         return self.name
+
 
 class Tag(models.Model):
     name = models.TextField(
@@ -63,7 +62,7 @@ class Recipe(models.Model):
     )
     image = models.ImageField(
         upload_to='recipes/',
-    ) 
+    )
     name = models.CharField(max_length=200)
     text = models.TextField()
     cooking_time = models.IntegerField(
@@ -78,20 +77,16 @@ class Recipe(models.Model):
     def __str__(self):
         return self.name
 
-    # def in_favorite(self, obj):
-    #     return obj.favorite.count()
-
 
 class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        # related_name='ingredient',
+        related_name='ingredients',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        # related_name='recipe'
     )
     amount = models.FloatField(
         validators=(MinValueValidator(0),),
@@ -111,12 +106,11 @@ class TagRecipe(models.Model):
     tag = models.ForeignKey(
         Tag,
         on_delete=models.CASCADE,
-        # related_name='tag',
+        related_name='tags',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        # related_name='recipe'
     )
 
     class Meta:
@@ -128,7 +122,7 @@ class TagRecipe(models.Model):
         ]
 
 
-class Favorited(models.Model):
+class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -166,5 +160,3 @@ class Shoping(models.Model):
                 name='unique_shoping_recipe',
             )
         ]
-
-

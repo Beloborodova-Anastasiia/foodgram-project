@@ -3,6 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 
 from .models import Subscribe, User
 
+
 class SubscribeInline(admin.TabularInline):
     model = Subscribe
     extra = 1
