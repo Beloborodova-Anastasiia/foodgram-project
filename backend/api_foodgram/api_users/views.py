@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import status, viewsets
+from rest_framework import mixins, status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -13,7 +13,14 @@ from .serializers import (UserSerializer, GetTokenSerializer,
 from users.models import User
 
 
-class UserApiViewSet(viewsets.ModelViewSet):
+class CreateRetrieveListViewSet(mixins.CreateModelMixin,
+                                mixins.RetrieveModelMixin,
+                                mixins.ListModelMixin,
+                                viewsets.GenericViewSet):
+    pass
+
+
+class UserViewSet(CreateRetrieveListViewSet):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
     serializer_class = UserSerializer
@@ -48,7 +55,6 @@ class UserApiViewSet(viewsets.ModelViewSet):
         new_password = serializer.data['new_password']
         user.set_password(new_password)
         user.save()
-        print(user.check_password(new_password))
         return Response(status=status.HTTP_200_OK)
 
 
