@@ -26,9 +26,9 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class GetTokenSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField()
-    
+    email = serializers.EmailField(required=True)
+    password = serializers.CharField(required=True)
+
     def validate(self, data):
         if 'email' in data and 'password' in data:
             if User.objects.filter(email=data['email']).exists():
@@ -53,10 +53,18 @@ class GetTokenSerializer(serializers.Serializer):
             raise serializers.ValidationError(message)
         return data
 
-# class DeleteTokenSerializer(serializers.Serializer):
-    
-#     def validate(self, data):
-#         user = self.context['request'].user
-#         if user.is_anonymous:
 
+class SetPasswordSerializer(serializers.Serializer):
+    new_password = serializers.CharField(required=True)
+    current_password = serializers.CharField(required=True)
 
+    # class Meta:
+    #     # model = User
+    #     fields = (
+    #         'new_password',
+    #         'current_password',
+    #     )
+
+    # def validate(self, data):
+    #     if 'new_password' in data and 'current_password' in data:
+    #         return data
