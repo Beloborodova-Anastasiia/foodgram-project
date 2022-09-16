@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from dotenv import load_dotenv
-from datetime import timedelta
+# from datetime import timedelta
 
 load_dotenv()
 
@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework.authtoken',
     'rest_framework',
+    'djoser',
     'django_filters',
     'users.apps.UsersConfig',
     'recipes.apps.RecipesConfig',
@@ -129,6 +130,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
@@ -147,11 +151,11 @@ REST_FRAMEWORK = {
 
 }
 
-SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
-    'AUTH_HEADER_TYPES': ('Bearer',),
-}
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
+#     'AUTH_HEADER_TYPES': ('Bearer',),
+# }
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
