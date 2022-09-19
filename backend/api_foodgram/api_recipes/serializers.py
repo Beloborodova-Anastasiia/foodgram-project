@@ -2,8 +2,10 @@ from urllib import request
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from recipes.models import Favorite, Ingredient, IngredientRecipe, Recipe, Tag, TagRecipe
+from recipes.models import (Favorite, Ingredient, IngredientRecipe,
+                            Recipe, Tag, TagRecipe, Shoping)
 from api_users.serializers import UserSerializer
+from .fields import ImageField
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -62,6 +64,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         many=True,
     )
     is_favorited = serializers.SerializerMethodField(read_only=True)
+    is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
+    image = ImageField()
 
     class Meta:
         model = Recipe
@@ -71,15 +75,14 @@ class RecipeSerializer(serializers.ModelSerializer):
             'author',
             'ingredients',
             'is_favorited',
-            # 'is_in_shopping_cart',
+            'is_in_shopping_cart',
             'name',
-            # 'image',
+            'image',
             'text',
             'cooking_time',
         )
 
     def create(self, validated_data):
-        recipe = Recipe.objects.get(id=1)
         ingredients = validated_data.pop('ingredients')
         tags = validated_data.pop('tags')
         recipe = Recipe.objects.create(
@@ -87,12 +90,10 @@ class RecipeSerializer(serializers.ModelSerializer):
             author=self.context['request'].user
         )
         for ingr in ingredients:
-            print(ingr['amount'])
             current_ingredient = get_object_or_404(
                 Ingredient,
                 id=ingr['id']
             )
-            print(current_ingredient)
             IngredientRecipe.objects.create(
                 ingredient=current_ingredient,
                 recipe=recipe,
@@ -102,11 +103,23 @@ class RecipeSerializer(serializers.ModelSerializer):
             current_tag = get_object_or_404(Tag, id=tag.id)
             TagRecipe.objects.create(
                 tag=current_tag, recipe=recipe)
+        Favorite.objects.create(
+            user=self.context['request'].user,
+            recipe=recipe
+        )
+        Shoping.objects.create(
+            user=self.context['request'].user,
+            recipe=recipe
+        )       
         return recipe
 
     def get_is_favorited(self, obj):
         user = self.context['request'].user
         return Favorite.objects.filter(user=user, recipe=obj).exists()
+
+    def get_is_in_shopping_cart(self, obj):
+        user = self.context['request'].user
+        return Shoping.objects.filter(user=user, recipe=obj).exists()
 
     def to_representation(self, instance):
         tags_serialized = TagSerializer(
