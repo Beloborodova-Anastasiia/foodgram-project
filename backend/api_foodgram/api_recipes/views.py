@@ -3,9 +3,14 @@ from rest_framework import mixins, status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.response import Response
+
+from rest_framework.permissions import SAFE_METHODS
 
 from recipes.models import Ingredient, Recipe, Tag, IngredientRecipe
-from .serializers import IngredientSerializer, RecipeSerializer, TagSerializer, IngredientRecipeSerializer
+from .serializers import (IngredientSerializer, RecipeSerializer,
+                          TagSerializer, IngredientRecipeSerializer,
+                          )
 
 
 class RetriveListViewSet(mixins.RetrieveModelMixin,
@@ -28,7 +33,7 @@ class IngredientViewSet(RetriveListViewSet):
     permission_classes = [IsAuthenticated]
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    search_fields = ('name',)
+    search_fields = ('^name',)
 
 
 class TagViewSet(RetriveListViewSet):
@@ -41,3 +46,4 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
     queryset = Recipe.objects.all()
     permission_classes = [AllowAny]
     serializer_class = RecipeSerializer
+

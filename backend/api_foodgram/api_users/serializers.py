@@ -58,13 +58,3 @@ class SetPasswordSerializer(serializers.Serializer):
     new_password = serializers.CharField(required=True)
     current_password = serializers.CharField(required=True)
 
-    # class Meta:
-    #     # model = User
-    #     fields = (
-    #         'new_password',
-    #         'current_password',
-    #     )
-
-    # def validate(self, data):
-    #     if 'new_password' in data and 'current_password' in data:
-    #         return data
