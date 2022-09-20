@@ -2,9 +2,6 @@ from rest_framework import permissions
 
 
 class UserOwner(permissions.BasePermission):
-    """
-    Разрешение пользователю работы со своим аккаунтом.
-    """
 
     def has_permission(self, request, view):
         return request.user.is_authenticated

@@ -1,16 +1,17 @@
-from django.shortcuts import get_object_or_404
+# from django.shortcuts import get_object_or_404
 from rest_framework import mixins, status, viewsets
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.response import Response
+# from rest_framework.response import Response
 
-from rest_framework.permissions import SAFE_METHODS
+# from rest_framework.permissions import SAFE_METHODS
 
 from recipes.models import Ingredient, Recipe, Tag, IngredientRecipe
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           TagSerializer, IngredientRecipeSerializer,
                           )
+from .permissions import AuthorOrAdmin
 
 
 class RetriveListViewSet(mixins.RetrieveModelMixin,
@@ -44,6 +45,5 @@ class TagViewSet(RetriveListViewSet):
 
 class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = [AllowAny]
+    permission_classes = [AuthorOrAdmin]
     serializer_class = RecipeSerializer
-

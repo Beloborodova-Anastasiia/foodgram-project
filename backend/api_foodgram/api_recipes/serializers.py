@@ -1,4 +1,3 @@
-from urllib import request
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
@@ -110,16 +109,54 @@ class RecipeSerializer(serializers.ModelSerializer):
         Shoping.objects.create(
             user=self.context['request'].user,
             recipe=recipe
-        )       
+        )
         return recipe
+
+    def update(self, instance, validated_data):
+        ingredients = validated_data.pop('ingredients')
+        ingredient_recipe = IngredientRecipe.objects.filter(
+            recipe=instance
+        )
+        ingredient_recipe.delete()
+        for ingr in ingredients:
+            current_ingredient = get_object_or_404(
+                Ingredient,
+                id=ingr['id']
+            )
+            IngredientRecipe.objects.create(
+                ingredient=current_ingredient,
+                recipe=instance,
+                amount=ingr['amount']
+            )
+        tags = validated_data.pop('tags')
+        tag_recipe = TagRecipe.objects.filter(
+            recipe=instance
+        )
+        tag_recipe.delete()
+        for tag in tags:
+            current_tag = get_object_or_404(Tag, id=tag.id)
+            TagRecipe.objects.create(
+                tag=current_tag, recipe=instance)
+        print(instance.id)
+        Recipe.objects.filter(id=instance.id).update(
+            **validated_data,
+        )
+        return super().update(instance, validated_data)
+
+    # def create(self, validated_data):
+    #     return super().create(validated_data)
 
     def get_is_favorited(self, obj):
         user = self.context['request'].user
-        return Favorite.objects.filter(user=user, recipe=obj).exists()
+        if user.is_authenticated:
+            return Favorite.objects.filter(user=user, recipe=obj).exists()
+        return False
 
     def get_is_in_shopping_cart(self, obj):
         user = self.context['request'].user
-        return Shoping.objects.filter(user=user, recipe=obj).exists()
+        if user.is_authenticated:
+            return Shoping.objects.filter(user=user, recipe=obj).exists()
+        return False
 
     def to_representation(self, instance):
         tags_serialized = TagSerializer(
