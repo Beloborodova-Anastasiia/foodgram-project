@@ -20,6 +20,8 @@ router.register(
     RecipeViewSet,
     basename='recipes'
 )
+# r'titles/(?P<title_id>[0-9]+)/reviews',
+    # path('v1/auth/signup/', signup, name='signup'),
 
 urlpatterns = [
     path('', include(router.urls)),

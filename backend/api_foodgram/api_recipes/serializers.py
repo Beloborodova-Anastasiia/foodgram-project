@@ -3,8 +3,8 @@ from rest_framework import serializers
 
 from recipes.models import (Favorite, Ingredient, IngredientRecipe,
                             Recipe, Tag, TagRecipe, Shoping)
-from api_users.serializers import UserSerializer
-from .fields import ImageField
+from api_users.serializers import CustomUserSerializer
+from .fields import Base64ImageField
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -42,6 +42,13 @@ class IngredientRecipeCreateSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     amount = serializers.FloatField()
 
+    def validate_amount(self, value):
+        if value < 1:
+            raise serializers.ValidationError(
+                'Количество должно быть больше нуля'
+            )
+        return value
+
 
 class TagSerializer(serializers.ModelSerializer):
 
@@ -56,7 +63,7 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class RecipeSerializer(serializers.ModelSerializer):
-    author = UserSerializer(read_only=True)
+    author = CustomUserSerializer(read_only=True)
     ingredients = IngredientRecipeCreateSerializer(many=True, write_only=True)
     tags = serializers.PrimaryKeyRelatedField(
         queryset=Tag.objects.all(),
@@ -64,7 +71,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     )
     is_favorited = serializers.SerializerMethodField(read_only=True)
     is_in_shopping_cart = serializers.SerializerMethodField(read_only=True)
-    image = ImageField()
+    image = Base64ImageField()
 
     class Meta:
         model = Recipe
@@ -137,14 +144,10 @@ class RecipeSerializer(serializers.ModelSerializer):
             current_tag = get_object_or_404(Tag, id=tag.id)
             TagRecipe.objects.create(
                 tag=current_tag, recipe=instance)
-        print(instance.id)
         Recipe.objects.filter(id=instance.id).update(
             **validated_data,
         )
         return super().update(instance, validated_data)
-
-    # def create(self, validated_data):
-    #     return super().create(validated_data)
 
     def get_is_favorited(self, obj):
         user = self.context['request'].user
@@ -172,3 +175,13 @@ class RecipeSerializer(serializers.ModelSerializer):
         representation['tags'] = tags_serialized
         representation['ingredients'] = ingredients_serialized
         return {**representation}
+
+
+class ShorrtcutRecipe(serializers.ModelSerializer):
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
+        reasd_only_fields = ('id', 'name', 'image', 'cooking_time')
+
+    

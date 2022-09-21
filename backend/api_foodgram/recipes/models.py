@@ -121,8 +121,8 @@ class IngredientRecipe(models.Model):
         verbose_name='Рецепт',
     )
     amount = models.FloatField(
-        validators=(MinValueValidator(0),),
-        default=0,
+        validators=(MinValueValidator(1),),
+        default=1,
         verbose_name='Количество',
     )
 
@@ -166,7 +166,7 @@ class Favorite(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='favorite',
+        # related_name='favorite',
         verbose_name='Пользователь',
     )
     recipe = models.ForeignKey(
@@ -189,12 +189,12 @@ class Shoping(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='shopping'
+        related_name='user'
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='shopping'
+        related_name='recipes'
     )
 
     class Meta:
