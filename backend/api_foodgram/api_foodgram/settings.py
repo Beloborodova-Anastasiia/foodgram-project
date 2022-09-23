@@ -27,11 +27,14 @@ SECRET_KEY = os.getenv('DJANGO_KEY', default='default')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'users.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/api/.*$'
 
 # Application definition
 
@@ -44,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework.authtoken',
     'rest_framework',
+    'corsheaders',
     'djoser',
     'django_filters',
     'users.apps.UsersConfig',
@@ -55,6 +59,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -88,7 +93,7 @@ WSGI_APPLICATION = 'api_foodgram.wsgi.application'
 
 # DATABASES = {
 #     'default': {
-#         'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),  # noqa: E501
+#         'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
 #         'NAME': os.getenv('DB_NAME', default='postgres'),
 #         'USER': os.getenv('POSTGRES_USER', default='postgres'),
 #         'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='123'),
@@ -152,7 +157,7 @@ DJOSER = {
     'SERIALIZERS': {
         'user': 'api_users.serializers.CustomUserSerializer',
         'current_user': 'api_users.serializers.CustomUserSerializer',
-        'user_create': 'api_users.serializers.CustomUserSerializer',
+        'user_create': 'api_users.serializers.CustomUserCreateSerializer',
     },
 }
 
@@ -175,6 +180,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

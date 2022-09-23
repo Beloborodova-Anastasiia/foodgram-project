@@ -9,12 +9,13 @@ from rest_framework.decorators import action, api_view
 
 # from rest_framework.permissions import SAFE_METHODS
 
-from recipes.models import Ingredient, Recipe, Tag, IngredientRecipe, Favorite
+from recipes.models import Ingredient, Recipe, Shoping, Tag, IngredientRecipe, Favorite
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           TagSerializer, IngredientRecipeSerializer,
                           )
 from .permissions import AuthorOrAdmin
 from users.models import User
+from .filters import RecipeFilter
 
 class RetriveListCreateDeleteUpdateViewSet(mixins.RetrieveModelMixin,
                                            mixins.ListModelMixin,
@@ -45,38 +46,13 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = TagSerializer
 
 
-class FavoriteFilterBackend(filters.BaseFilterBackend):
-
-    def filter_queryset(self, request, queryset, view):
-        user=request.user
-        querys = Favorite.objects.filter(user=user)
-        # groups = groups.objects.filter(item__in=items).distinct().values_list('name', flat=True)
-
-        recipes = Recipe.objects.filter(id__in=querys.values_list('recipe',))
-        # rec = user.favorite.all()
-        print(user, querys.values_list('recipe',))
-        print(recipes)
-        # posts = Post.objects.filter(author__following__user=request.user)
-
-        # return request.user.favorite.all()
-        return recipes
-
 class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
     queryset = Recipe.objects.all()
-    permission_classes = [AuthorOrAdmin]
+    permission_classes = [AllowAny]
     serializer_class = RecipeSerializer
-    # filter_backends = (DjangoFilterBackend, FavoriteFilterBackend)
-    filterset_fields = ('author', 'tags', 'favorite')
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = RecipeFilter
 
-    # def get_queryset(self):
-    #     queryset = Recipe.objects.all()
-    #     print(self.kwargs)
-    #     if 'favorite' in self.kwargs:
-    #         queryset = queryset.favoreted.all()
-    #     if 'shopping_cart' in self.kwargs:
-    #         queryset = queryset.shopping.all()
-    #     return queryset
-    # def get_filter_backends
 
 class Favorited(CreateDeleteViewSet):
     queryset = Favorite.objects.all()

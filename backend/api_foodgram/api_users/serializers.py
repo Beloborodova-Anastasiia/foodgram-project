@@ -2,7 +2,7 @@ from rest_framework import serializers
 from users.models import User, Subscribe
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import authenticate
-from djoser.serializers import UserSerializer
+from djoser.serializers import UserSerializer, UserCreateSerializer
 
 
 class CustomUserSerializer(UserSerializer):
@@ -18,7 +18,7 @@ class CustomUserSerializer(UserSerializer):
             'last_name',
             'is_subscribed',
         )
-        read_only_fields = ('id', 'is_subscribed')
+        read_only_fields = ('is_subscribed',)
 
     def get_is_subscribed(self, obj):
         user = self.context['request'].user
@@ -27,6 +27,15 @@ class CustomUserSerializer(UserSerializer):
         return Subscribe.objects.filter(author=obj, user=user).exists()
 
 
-class SetPasswordSerializer(serializers.Serializer):
-    new_password = serializers.CharField(required=True)
-    current_password = serializers.CharField(required=True)
+class CustomUserCreateSerializer(UserCreateSerializer):
+
+    class Meta:
+        model = User
+        fields = (
+            'id',
+            'username',
+            'email',
+            'first_name',
+            'last_name',
+            'password',
+        )

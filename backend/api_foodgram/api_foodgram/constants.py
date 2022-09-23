@@ -1,3 +1,3 @@
-PATH_TO_DATA = '/home/bliznez/Dev/foodgram-project-react/data/ingredients.csv'
-KEYWORD_ME = 'me'
-KEYWORD_SET_PASSWORD = 'set_password'
+PATH_TO_DATA = '/*/foodgram-project-react/data/ingredients.csv'
+FILTER_FAVORITE_OR_SHOPPING = 1
+

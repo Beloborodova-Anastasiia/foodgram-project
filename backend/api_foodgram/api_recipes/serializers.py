@@ -185,3 +185,6 @@ class ShorrtcutRecipe(serializers.ModelSerializer):
         reasd_only_fields = ('id', 'name', 'image', 'cooking_time')
 
     
+
+# class Subscribe(serializers.ModelSerializer):
+
