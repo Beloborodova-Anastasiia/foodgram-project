@@ -177,7 +177,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         return {**representation}
 
 
-class ShorrtcutRecipe(serializers.ModelSerializer):
+class ShortcutRecipe(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe

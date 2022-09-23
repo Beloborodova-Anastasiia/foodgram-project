@@ -1,6 +1,6 @@
 from django.urls import include, path
 from rest_framework import routers
-from .views import IngredientViewSet, TagViewSet, RecipeViewSet
+from .views import IngredientViewSet, TagViewSet, RecipeViewSet, FavoriteViewSet
 
 
 app_name = 'api_recipes'
@@ -20,6 +20,11 @@ router.register(
     RecipeViewSet,
     basename='recipes'
 )
+# router.register(
+#     r'recipes/(?P<recipe_id>[0-9]+)/favorite',
+#     FavoriteViewSet,
+#     basename='favorite'
+# )
 # r'titles/(?P<title_id>[0-9]+)/reviews',
     # path('v1/auth/signup/', signup, name='signup'),
 
