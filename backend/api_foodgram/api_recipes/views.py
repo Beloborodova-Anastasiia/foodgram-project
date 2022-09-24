@@ -10,14 +10,14 @@ from django.shortcuts import get_object_or_404
 # from rest_framework.permissions import SAFE_METHODS
 
 from recipes.models import Ingredient, Recipe, Shoping, Tag, IngredientRecipe, Favorite
-from .serializers import (IngredientSerializer, RecipeSerializer, ShortcutRecipe,
+from .serializers import (IngredientSerializer, RecipeSerializer, ShortcutRecipeSerializer,
                           TagSerializer, IngredientRecipeSerializer,
                           )
 from .permissions import AuthorOrAdmin
 from users.models import User
 from .filters import RecipeFilter
-from api_foodgram.constants import PATH_FAVORITE
-
+from api_foodgram.constants import PATH_FAVORITE, PATH_SUBSCRIPTIONS
+from .utilits import create_relation
 class RetriveListCreateDeleteUpdateViewSet(mixins.RetrieveModelMixin,
                                            mixins.ListModelMixin,
                                            mixins.CreateModelMixin,
@@ -60,13 +60,14 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
         url_path=PATH_FAVORITE,
         permission_classes=[IsAuthenticated]
     )
-    def favorite(self, request, recipe_id):
+    def favorite(self, request, *args, **kwargs):
         recipe = get_object_or_404(
             Recipe,
             id=self.kwargs.get('recipe_id'),
         )
+        user = request.user
         if request.method == 'POST':
-            if Favorite.objects.filter(recipe=recipe).exists():
+            if Favorite.objects.filter(user=user, recipe=recipe).exists():
                 context = {
                     'errors': 'Рецепт уже есть в избранном'
                 }
@@ -74,46 +75,21 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
                     context,
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            Favorite.objects.create(user=self.request.user, recipe=recipe)
-            serializer = ShortcutRecipe(recipe)
+            Favorite.objects.create(user=user, recipe=recipe)
+            serializer = ShortcutRecipeSerializer(recipe)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if Favorite.objects.filter(recipe=recipe).exists():
-            Favorite.objects.filter(
-                user=self.request.user, recipe=recipe
-            ).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        context = {
-            'errors': 'Рецепта нет в избранном'
-        }
-        return Response(
-            context,
-            status=status.HTTP_400_BAD_REQUEST
-        )
+        if request.method == 'DELETE':
+            if Favorite.objects.filter(user=user, recipe=recipe).exists():
+                Favorite.objects.filter(
+                    user=user, recipe=recipe
+                ).delete()
+                return Response(status=status.HTTP_204_NO_CONTENT)
+            context = {
+                'errors': 'Рецепта нет в избранном'
+            }
+            return Response(
+                context,
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
-
-
-class FavoriteViewSet(RetriveListCreateDeleteUpdateViewSet):
-    queryset = Recipe.objects.all()
-    permission_classes = [IsAuthenticated]
-    serializer_class = ShortcutRecipe
     
-    # @action(
-    #     methods=['post'],
-    #     detail=False,
-    # )
-    def perform_create(self):
-        # recipe = get_object_or_404(
-        #     Recipe,
-        #     id=self.kwargs.get('recipe_id'),
-        # )
-        # print(recipe)
-        # if Favorite.objects.filter(recipe=recipe).exists():
-        #     return Response(
-        #         'Рецепт уже есть в избранном',
-        #         status=status.HTTP_400_BAD_REQUEST
-        #     )
-        # Favorite.objects.create(user=self.request.user, recipe=recipe)
-        # serializer.data(
-        #     recipe=recipe
-        # )
-        return Response('oK', status=status.HTTP_201_CREATED)

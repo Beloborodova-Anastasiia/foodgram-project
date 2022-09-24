@@ -3,8 +3,9 @@ from rest_framework import serializers
 
 from recipes.models import (Favorite, Ingredient, IngredientRecipe,
                             Recipe, Tag, TagRecipe, Shoping)
-from api_users.serializers import CustomUserSerializer
 from .fields import Base64ImageField
+from users.models import User, Subscribe
+from api_users.serializers import CustomUserSerializer
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -177,14 +178,40 @@ class RecipeSerializer(serializers.ModelSerializer):
         return {**representation}
 
 
-class ShortcutRecipe(serializers.ModelSerializer):
+class ShortcutRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
         fields = ('id', 'name', 'image', 'cooking_time')
         reasd_only_fields = ('id', 'name', 'image', 'cooking_time')
 
-    
 
-# class Subscribe(serializers.ModelSerializer):
+class SubscribtionSerializer(serializers.ModelSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+    recipes_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = User
+        fields = (
+            'email',
+            'id',
+            'username',
+            'first_name',
+            'last_name',
+            'is_subscribed',
+            'recipes_count',
+        )
+        read_only = True
+
+    def get_is_subscribed(self, obj):
+        # user = self.context['request'].user
+        # if user.is_anonymous:
+        #     return False
+        # return Subscribe.objects.filter(author=obj, user=user).exists()
+        return True
+
+    def get_recipes_count(self, obj):
+        recipes = obj.recipes.all()
+        # print(recipes)
+        return 'Test'
 
