@@ -21,12 +21,11 @@ class CreateRetrieveListViewSet(mixins.CreateModelMixin,
 
 
 class CustomUserViewSet(UserViewSet):
-    
+
     def get_queryset(self):
         if PATH_SUBSCRIPTIONS in self.request.path:
             user = self.request.user
             subscriptions = Subscribe.objects.filter(user=user)
-            print(subscriptions)
             return User.objects.filter(
                 id__in=subscriptions.values_list('author',)
             )
@@ -34,7 +33,7 @@ class CustomUserViewSet(UserViewSet):
 
     def get_serializer_class(self, *args, **kwargs):
         if (PATH_SUBSCRIPTIONS in self.request.path
-            or PATH_SUBSCRIBE in self.request.path):
+                or PATH_SUBSCRIBE in self.request.path):
             return SubscribtionSerializer
         return CustomUserSerializer
 

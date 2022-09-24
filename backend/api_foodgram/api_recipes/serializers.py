@@ -189,6 +189,7 @@ class ShortcutRecipeSerializer(serializers.ModelSerializer):
 class SubscribtionSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
+    recipes = ShortcutRecipeSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
@@ -199,19 +200,19 @@ class SubscribtionSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'is_subscribed',
+            'recipes',
             'recipes_count',
         )
         read_only = True
 
     def get_is_subscribed(self, obj):
-        # user = self.context['request'].user
-        # if user.is_anonymous:
-        #     return False
-        # return Subscribe.objects.filter(author=obj, user=user).exists()
+        user = self.context['request'].user
+        if user.is_anonymous:
+            return False
+        return Subscribe.objects.filter(author=obj, user=user).exists()
         return True
 
     def get_recipes_count(self, obj):
-        recipes = obj.recipes.all()
-        # print(recipes)
-        return 'Test'
+        recipes = obj.recipes.all().count()
+        return recipes
 
