@@ -1,8 +1,9 @@
 from csv import DictReader
 
 from django.core.management import BaseCommand
-from recipes.models import Ingredient
+
 from api_foodgram.constants import PATH_TO_DATA
+from recipes.models import Ingredient
 
 ALREDY_LOADED_ERROR_MESSAGE = """
 If you need to reload the child data from the CSV file,

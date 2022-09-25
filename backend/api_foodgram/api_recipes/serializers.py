@@ -1,11 +1,12 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
-from recipes.models import (Favorite, Ingredient, IngredientRecipe,
-                            Recipe, Tag, TagRecipe, Shopping)
-from .fields import Base64ImageField
-from users.models import User, Subscribe
 from api_users.serializers import CustomUserSerializer
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            Shopping, Tag, TagRecipe)
+from users.models import Subscribe, User
+
+from .fields import Base64ImageField
 
 
 class IngredientSerializer(serializers.ModelSerializer):
@@ -121,30 +122,32 @@ class RecipeSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
-        ingredients = validated_data.pop('ingredients')
-        ingredient_recipe = IngredientRecipe.objects.filter(
-            recipe=instance
-        )
-        ingredient_recipe.delete()
-        for ingr in ingredients:
-            current_ingredient = get_object_or_404(
-                Ingredient,
-                id=ingr['id']
+        if 'ingredients' in validated_data:
+            ingredients = validated_data.pop('ingredients')
+            ingredient_recipe = IngredientRecipe.objects.filter(
+                recipe=instance
             )
-            IngredientRecipe.objects.create(
-                ingredient=current_ingredient,
-                recipe=instance,
-                amount=ingr['amount']
+            ingredient_recipe.delete()
+            for ingr in ingredients:
+                current_ingredient = get_object_or_404(
+                    Ingredient,
+                    id=ingr['id']
+                )
+                IngredientRecipe.objects.create(
+                    ingredient=current_ingredient,
+                    recipe=instance,
+                    amount=ingr['amount']
+                )
+        if 'tags' in validated_data:
+            tags = validated_data.pop('tags')
+            tag_recipe = TagRecipe.objects.filter(
+                recipe=instance
             )
-        tags = validated_data.pop('tags')
-        tag_recipe = TagRecipe.objects.filter(
-            recipe=instance
-        )
-        tag_recipe.delete()
-        for tag in tags:
-            current_tag = get_object_or_404(Tag, id=tag.id)
-            TagRecipe.objects.create(
-                tag=current_tag, recipe=instance)
+            tag_recipe.delete()
+            for tag in tags:
+                current_tag = get_object_or_404(Tag, id=tag.id)
+                TagRecipe.objects.create(
+                    tag=current_tag, recipe=instance)
         Recipe.objects.filter(id=instance.id).update(
             **validated_data,
         )
@@ -189,7 +192,6 @@ class ShortcutRecipeSerializer(serializers.ModelSerializer):
 class SubscribtionSerializer(serializers.ModelSerializer):
     is_subscribed = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
-    # recipes = ShortcutRecipeSerializer(many=True, read_only=True)
     recipes = serializers.SerializerMethodField()
 
     class Meta:
@@ -217,9 +219,7 @@ class SubscribtionSerializer(serializers.ModelSerializer):
         if user.is_anonymous:
             return False
         return Subscribe.objects.filter(author=obj, user=user).exists()
-        return True
 
     def get_recipes_count(self, obj):
         recipes = obj.recipes.all().count()
         return recipes
-

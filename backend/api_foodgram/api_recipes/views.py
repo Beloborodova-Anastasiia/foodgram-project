@@ -1,37 +1,23 @@
-from rest_framework import mixins, status, viewsets
-from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.response import Response
-from rest_framework.decorators import action, api_view
-from django.shortcuts import get_object_or_404
 import csv
+
 from django.http import HttpResponse
-# from rest_framework.permissions import SAFE_METHODS
+from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters, status, viewsets
+from rest_framework.decorators import action
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
-from recipes.models import Ingredient, Recipe, Shopping, Tag, IngredientRecipe, Favorite
-from .serializers import (IngredientSerializer, RecipeSerializer, ShortcutRecipeSerializer,
-                          TagSerializer, IngredientRecipeSerializer,
-                          )
-from .permissions import AuthorOrAdmin
-from users.models import User
+from api_foodgram.constants import (PASH_SHOPPING_CART,
+                                    PATH_DOWNLOAD_SHOPPING_CART, PATH_FAVORITE,
+                                    SAVE_AS)
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            Shopping, Tag)
+
 from .filters import RecipeFilter
-from api_foodgram.constants import (PATH_FAVORITE, PATH_DOWNLOAD_SHOPPING_CART,
-                                    PASH_SHOPPING_CART, SAVE_AS)
-from .utilits import create_relation
-class RetriveListCreateDeleteUpdateViewSet(mixins.RetrieveModelMixin,
-                                           mixins.ListModelMixin,
-                                           mixins.CreateModelMixin,
-                                           mixins.UpdateModelMixin,
-                                           mixins.DestroyModelMixin,
-                                           viewsets.GenericViewSet):
-    pass
-
-
-class CreateDeleteViewSet(mixins.CreateModelMixin,
-                          mixins.DestroyModelMixin,
-                          viewsets.GenericViewSet):
-    pass
+from .mixins import RetriveListCreateDeleteUpdateViewSet
+from .serializers import (IngredientSerializer, RecipeSerializer,
+                          ShortcutRecipeSerializer, TagSerializer)
 
 
 class IngredientViewSet(viewsets.ReadOnlyModelViewSet):

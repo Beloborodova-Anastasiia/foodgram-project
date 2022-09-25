@@ -1,8 +1,7 @@
+from djoser.serializers import UserCreateSerializer, UserSerializer
 from rest_framework import serializers
-from users.models import User, Subscribe
-from django.shortcuts import get_object_or_404
-from django.contrib.auth import authenticate
-from djoser.serializers import UserSerializer, UserCreateSerializer
+
+from users.models import Subscribe, User
 
 
 class CustomUserSerializer(UserSerializer):

@@ -1,6 +1,7 @@
 import django_filters
-from recipes.models import Recipe, Favorite, Shopping
+
 from api_foodgram.constants import FILTER_FAVORITE_OR_SHOPPING
+from recipes.models import Favorite, Recipe, Shopping
 
 
 class RecipeFilter(django_filters.FilterSet):
