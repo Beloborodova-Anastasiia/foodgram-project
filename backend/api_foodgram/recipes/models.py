@@ -185,7 +185,7 @@ class Favorite(models.Model):
         ]
 
 
-class Shoping(models.Model):
+class Shopping(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

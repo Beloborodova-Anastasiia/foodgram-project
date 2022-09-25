@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import serializers
 
 from recipes.models import (Favorite, Ingredient, IngredientRecipe,
-                            Recipe, Tag, TagRecipe, Shoping)
+                            Recipe, Tag, TagRecipe, Shopping)
 from .fields import Base64ImageField
 from users.models import User, Subscribe
 from api_users.serializers import CustomUserSerializer
@@ -114,7 +114,7 @@ class RecipeSerializer(serializers.ModelSerializer):
             user=self.context['request'].user,
             recipe=recipe
         )
-        Shoping.objects.create(
+        Shopping.objects.create(
             user=self.context['request'].user,
             recipe=recipe
         )
@@ -159,7 +159,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     def get_is_in_shopping_cart(self, obj):
         user = self.context['request'].user
         if user.is_authenticated:
-            return Shoping.objects.filter(user=user, recipe=obj).exists()
+            return Shopping.objects.filter(user=user, recipe=obj).exists()
         return False
 
     def to_representation(self, instance):

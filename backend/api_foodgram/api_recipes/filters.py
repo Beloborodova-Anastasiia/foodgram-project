@@ -1,5 +1,5 @@
 import django_filters
-from recipes.models import Recipe, Favorite, Shoping
+from recipes.models import Recipe, Favorite, Shopping
 from api_foodgram.constants import FILTER_FAVORITE_OR_SHOPPING
 
 
@@ -43,7 +43,7 @@ class RecipeFilter(django_filters.FilterSet):
     def is_in_shopping_cart_filter(self, queryset, name, value):
         if value == FILTER_FAVORITE_OR_SHOPPING:
             user = self.request.user
-            query_relate = Shoping.objects.filter(user=user)
+            query_relate = Shopping.objects.filter(user=user)
             queryset = Recipe.objects.filter(
                 id__in=query_relate.values_list('recipe',)
             )

@@ -20,13 +20,6 @@ router.register(
     RecipeViewSet,
     basename='recipes'
 )
-# router.register(
-#     r'recipes/(?P<recipe_id>[0-9]+)/favorite',
-#     FavoriteViewSet,
-#     basename='favorite'
-# )
-# r'titles/(?P<title_id>[0-9]+)/reviews',
-    # path('v1/auth/signup/', signup, name='signup'),
 
 urlpatterns = [
     path('', include(router.urls)),
