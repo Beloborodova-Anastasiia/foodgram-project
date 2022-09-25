@@ -35,16 +35,23 @@ class RecipeAdmin(admin.ModelAdmin):
         'pk',
         'author',
         'name',
-        'in_favorite',
     )
     list_filter = ('name', 'author', 'tags')
     search_fields = ('name', 'author', 'tags')
     empty_value_display = '-empty-'
     date_hierarchy = 'pub_date'
     inlines = (IngredientsInline, TagsInline,)
-    # field = ('in_favorite',)
+    fields = (
+        'author',
+        'name',
+        'image',
+        'text',
+        'cooking_time',
+        'is_favorite',
+    )
+    readonly_fields = ('is_favorite',)
 
-    def in_favorite(self, obj):
+    def is_favorite(self, obj):
         return obj.favorite.count()
 
 
