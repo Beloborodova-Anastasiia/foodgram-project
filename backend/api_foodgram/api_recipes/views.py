@@ -17,7 +17,7 @@ from .permissions import AuthorOrAdmin
 from users.models import User
 from .filters import RecipeFilter
 from api_foodgram.constants import (PATH_FAVORITE, PATH_DOWNLOAD_SHOPPING_CART,
-                                    PASH_SHOPPING_CART)
+                                    PASH_SHOPPING_CART, SAVE_AS)
 from .utilits import create_relation
 class RetriveListCreateDeleteUpdateViewSet(mixins.RetrieveModelMixin,
                                            mixins.ListModelMixin,
@@ -130,7 +130,7 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
                 context,
                 status=status.HTTP_400_BAD_REQUEST
             )
-    
+
     @action(
         methods=['get'],
         detail=False,
@@ -139,20 +139,14 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
     )
     def download_shopping_cart(self, request):
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
-
+        response['Content-Disposition'] = SAVE_AS
         writer = csv.writer(response)
-        # writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
-        
         shopping = Shopping.objects.filter(user=request.user)
         recipes = Recipe.objects.filter(
             id__in=shopping.values_list('recipe',)
         )
         shopping_cart = {}
         for recipe in recipes:
-            # ingredients = Ingredient.objects.filter(
-            #     id__in=recipe.values_list('ingredients',)
-            # )
             ingredients = recipe.ingredients.all()
             for ingredient in ingredients:
                 amount = get_object_or_404(
