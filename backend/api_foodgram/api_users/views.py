@@ -4,6 +4,7 @@ from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from api_foodgram.constants import PATH_SUBSCRIBE, PATH_SUBSCRIPTIONS
 from api_recipes.serializers import SubscribtionSerializer
@@ -20,6 +21,7 @@ class CreateRetrieveListViewSet(mixins.CreateModelMixin,
 
 
 class CustomUserViewSet(UserViewSet):
+    pagination_class = PageNumberPagination
 
     def get_queryset(self):
         if PATH_SUBSCRIPTIONS in self.request.path:

@@ -11,9 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-
 from dotenv import load_dotenv
-
 load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -138,8 +136,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
     ],
-    'DEFAULT_PAGINATION_CLASS':
-        'rest_framework.pagination.LimitOffsetPagination',
+    'DEFAULT_PAGINATION_CLASS': None,
     'PAGE_SIZE': 10,
 
     'DEFAULT_THROTTLE_CLASSES': [
@@ -161,6 +158,7 @@ DJOSER = {
         'current_user': 'api_users.serializers.CustomUserSerializer',
         'user_create': 'api_users.serializers.CustomUserCreateSerializer',
     },
+
 }
 
 

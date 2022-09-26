@@ -1,12 +1,16 @@
-import csv
+import io
+from urllib import response
+from django.http import FileResponse
+from reportlab.pdfgen import canvas
 
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, status, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
 
 from api_foodgram.constants import (PASH_SHOPPING_CART,
                                     PATH_DOWNLOAD_SHOPPING_CART, PATH_FAVORITE,
@@ -14,23 +18,25 @@ from api_foodgram.constants import (PASH_SHOPPING_CART,
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             Shopping, Tag)
 
-from .filters import RecipeFilter
-from .mixins import RetriveListCreateDeleteUpdateViewSet
+from .filters import IngredientFilter, RecipeFilter
+from .mixins import RetriveListViewSet, RetriveListCreateDeleteUpdateViewSet
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           ShortcutRecipeSerializer, TagSerializer)
 
 
-class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
+class IngredientViewSet(RetriveListViewSet):
     queryset = Ingredient.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
-    search_fields = ('^name',)
+    filterset_class = IngredientFilter
+    # search_fields = ('^name',)
+    # filterset_fields = ('name',)
 
 
-class TagViewSet(viewsets.ReadOnlyModelViewSet):
+class TagViewSet(RetriveListViewSet):
     queryset = Tag.objects.all()
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = TagSerializer
 
 
@@ -40,6 +46,7 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
     serializer_class = RecipeSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
+    pagination_class = PageNumberPagination
 
     @action(
         methods=['post', 'delete'],
@@ -124,12 +131,11 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
         permission_classes=[IsAuthenticated]
     )
     def download_shopping_cart(self, request):
-        response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = SAVE_AS
-        writer = csv.writer(response)
-        shopping = Shopping.objects.filter(user=request.user)
+        file_response = HttpResponse(content_type='text/plain')
+        file_response['Content-Disposition'] = SAVE_AS
+        shopping_obj = Shopping.objects.filter(user=request.user)
         recipes = Recipe.objects.filter(
-            id__in=shopping.values_list('recipe',)
+            id__in=shopping_obj.values_list('recipe',)
         )
         shopping_cart = {}
         for recipe in recipes:
@@ -140,10 +146,12 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
                     recipe=recipe,
                     ingredient=ingredient
                 ).amount
-                if ingredient.name in shopping_cart:
-                    shopping_cart[ingredient.name] += amount
+                if ingredient in shopping_cart:
+                    shopping_cart[ingredient] += amount
                 else:
-                    shopping_cart[ingredient.name] = amount
+                    shopping_cart[ingredient] = amount
         for ingredient in shopping_cart:
-            writer.writerow([ingredient, shopping_cart[ingredient]])
-        return response
+            line = (str(ingredient) + '  ' + str(shopping_cart[ingredient])
+                    + str(ingredient.measurement_unit) + '\n')
+            file_response.write(line)
+        return file_response

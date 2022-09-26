@@ -1,18 +1,10 @@
 import django_filters
 
 from api_foodgram.constants import FILTER_FAVORITE_OR_SHOPPING
-from recipes.models import Favorite, Recipe, Shopping
+from recipes.models import Favorite, Ingredient, Recipe, Shopping
 
 
 class RecipeFilter(django_filters.FilterSet):
-    # is_favorite = django_filters.BooleanFilter(
-    #     field_name='is_favorite',
-    #     # lookup_expr='iexact'
-    # )
-    # is_in_shopping_cart = django_filters.BooleanFilter(
-    #     field_name='is_in_shopping_cart',
-    #     # lookup_expr='iexact'
-    # )
     tags = django_filters.CharFilter(
         field_name='tags__slug',
         lookup_expr='iexact'
@@ -49,3 +41,16 @@ class RecipeFilter(django_filters.FilterSet):
                 id__in=query_relate.values_list('recipe',)
             )
         return queryset
+
+
+class IngredientFilter(django_filters.FilterSet):
+    name = django_filters.CharFilter(
+        field_name='name',
+        lookup_expr='istartswith'
+    )
+
+    class Meta:
+        model = Ingredient
+        fields = {
+            'name',
+        }

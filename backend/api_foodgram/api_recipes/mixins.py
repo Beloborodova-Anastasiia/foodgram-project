@@ -8,3 +8,9 @@ class RetriveListCreateDeleteUpdateViewSet(mixins.RetrieveModelMixin,
                                            mixins.DestroyModelMixin,
                                            viewsets.GenericViewSet):
     pass
+
+
+class RetriveListViewSet(mixins.RetrieveModelMixin,
+                         mixins.ListModelMixin,
+                         viewsets.GenericViewSet):
+    pass
