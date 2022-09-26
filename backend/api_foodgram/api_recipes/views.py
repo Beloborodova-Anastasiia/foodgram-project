@@ -137,7 +137,7 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
         recipes = Recipe.objects.filter(
             id__in=shopping_obj.values_list('recipe',)
         )
-        shopping_cart = {}
+        shopping_list = {}
         for recipe in recipes:
             ingredients = recipe.ingredients.all()
             for ingredient in ingredients:
@@ -146,12 +146,12 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
                     recipe=recipe,
                     ingredient=ingredient
                 ).amount
-                if ingredient in shopping_cart:
-                    shopping_cart[ingredient] += amount
+                if ingredient in shopping_list:
+                    shopping_list[ingredient] += amount
                 else:
-                    shopping_cart[ingredient] = amount
-        for ingredient in shopping_cart:
-            line = (str(ingredient) + '  ' + str(shopping_cart[ingredient])
+                    shopping_list[ingredient] = amount
+        for ingredient in shopping_list:
+            line = (str(ingredient) + '  ' + str(shopping_list[ingredient])
                     + str(ingredient.measurement_unit) + '\n')
             file_response.write(line)
         return file_response
