@@ -15,8 +15,10 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
+      - static_value:/var/html/static/
+      - media_value:/var/html/media/
     depends_on:
-      - web
+      - backend
 
   db:
     image: postgres:13.0-alpine
@@ -25,7 +27,7 @@ services:
     env_file:
       - ./.env
 
-  web:
+  backend:
     # image: abeloborodova/api_yamdb:latest
     build: ../backend/api_foodgram
     restart: always
