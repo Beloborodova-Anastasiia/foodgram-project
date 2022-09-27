@@ -1,49 +1,70 @@
 from django.shortcuts import get_object_or_404
-from rest_framework import mixins, status, viewsets
+from rest_framework import status
 from rest_framework.response import Response
 
 from recipes.models import Recipe
+from .serializers import RecipeSerializer, ShortcutRecipeSerializer
+from api_foodgram.constants import ERROR_MESSAGES
 
 
-def create_relation(**kwargs):
-    model = kwargs['model']
+def create_relation(*args, **kwargs):
+    model = kwargs.get('model')
+    object_id = kwargs.get((str(model.__name__).lower() + '_id'))
     object = get_object_or_404(
         model,
-        id=kwargs['object_id'],
+        id=object_id,
     )
-    model_relate = kwargs['model_relate']
-    user = kwargs['user']
-    if model_relate.objects.filter(user=user, object=object).exists():
-        message = kwargs['message']
+    user = kwargs.get('request').user
+    relate_model = kwargs.get('relate_model')
+    query_relate = relate_model.objects.filter(user=user)
+    queryset = model.objects.filter(
+        id__in=query_relate.values_list((str(model.__name__).lower()),)
+    )
+    if object in queryset:
+        message = ERROR_MESSAGES['exists']
         context = {
-            'errors': f'Рецепт уже есть в {message}'
+            'errors': (
+                f'{model._meta.verbose_name} '
+                f'{message} {relate_model._meta.verbose_name}'
+            )
         }
-        return Response(
-            context,
-            status=status.HTTsP_400_BAD_REQUEST
-        )
-    model_relate.objects.create(user=user, object=object)
-    serializer = kwargs['serializer'](object)
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return context, status.HTTP_400_BAD_REQUEST
+    data = {
+        'user': user,
+        str(model.__name__).lower(): object
+    }
+    relate_model.objects.create(**data)
+    serializer = kwargs.get('serializer')
+    context = {'request': kwargs.get('request')}
+    serializer = serializer(object)
+    return serializer.data, status.HTTP_201_CREATED
 
 
 def delete_relation(**kwargs):
-    model_relate = kwargs['model_relate']
-    model = kwargs['model']
-    recipe = get_object_or_404(
+    model = kwargs.get('model')
+    object_id = kwargs.get((str(model.__name__).lower() + '_id'))
+    object = get_object_or_404(
         model,
-        id=kwargs['model_id'],
+        id=object_id,
     )
-    if model_relate.objects.filter(recipe=recipe).exists():
-        model_relate.objects.filter(
-            user=kwargs['user'], recipe=recipe
-        ).delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
-    message = kwargs['message']
-    context = {
-        'errors': f'Рецепта нет в {message}'
+    user = kwargs.get('request').user
+    relate_model = kwargs.get('relate_model')
+    query_relate = relate_model.objects.filter(user=user)
+    queryset = model.objects.filter(
+        id__in=query_relate.values_list((str(model.__name__).lower()),)
+    )
+    if object not in queryset:
+        message = ERROR_MESSAGES['non_exists']
+        context = {
+            'errors': (
+                f'{model._meta.verbose_name} '
+                f'{message} {relate_model._meta.verbose_name}'
+            )
+        }
+        return context, status.HTTP_400_BAD_REQUEST
+    data = {
+        'user': user,
+        str(model.__name__).lower(): object
     }
-    return Response(
-        context,
-        status=status.HTTP_400_BAD_REQUEST
-    )
+    relate_model.objects.filter(**data).delete()
+    return None, status.HTTP_204_NO_CONTENT

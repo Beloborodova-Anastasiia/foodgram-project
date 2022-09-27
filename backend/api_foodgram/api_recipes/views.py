@@ -18,6 +18,7 @@ from .filters import IngredientFilter, RecipeFilter
 from .mixins import RetriveListViewSet, RetriveListCreateDeleteUpdateViewSet
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           ShortcutRecipeSerializer, TagSerializer)
+from .utilits import create_relation, delete_relation
 
 
 class IngredientViewSet(RetriveListViewSet):
@@ -40,9 +41,8 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
     queryset = Recipe.objects.all().order_by('-pub_date')
     permission_classes = [AllowAny]
     serializer_class = RecipeSerializer
-    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
+    filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
-    ordering_fields = ('pub_date')
 
     @action(
         methods=['post', 'delete'],
@@ -51,36 +51,33 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
         permission_classes=[IsAuthenticated]
     )
     def favorite(self, request, *args, **kwargs):
-        recipe = get_object_or_404(
-            Recipe,
-            id=self.kwargs.get('recipe_id'),
-        )
-        user = request.user
+        # recipe = get_object_or_404(
+        #     Recipe,
+        #     id=self.kwargs.get('recipe_id'),
+        # )
+        context = None
         if request.method == 'POST':
-            if Favorite.objects.filter(user=user, recipe=recipe).exists():
-                context = {
-                    'errors': 'Рецепт уже есть в избранном'
-                }
-                return Response(
-                    context,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            Favorite.objects.create(user=user, recipe=recipe)
-            serializer = ShortcutRecipeSerializer(recipe)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if request.method == 'DELETE':
-            if Favorite.objects.filter(user=user, recipe=recipe).exists():
-                Favorite.objects.filter(
-                    user=user, recipe=recipe
-                ).delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-            context = {
-                'errors': 'Рецепта нет в избранном'
-            }
-            return Response(
-                context,
-                status=status.HTTP_400_BAD_REQUEST
+            context, response_status = create_relation(
+                request=request,
+                model=Recipe,
+                relate_model=Favorite,
+                serializer=ShortcutRecipeSerializer,
+                *args,
+                **kwargs
             )
+    
+        # user = request.user
+        
+        if request.method == 'DELETE':
+            context, response_status = delete_relation(
+                request=request,
+                model=Recipe,
+                relate_model=Favorite,
+                serializer=ShortcutRecipeSerializer,
+                *args,
+                **kwargs
+            )
+        return Response(context, status=response_status)
 
     @action(
         methods=['post', 'delete'],
@@ -89,36 +86,51 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
         permission_classes=[IsAuthenticated]
     )
     def shopping_cart(self, request, *args, **kwargs):
-        recipe = get_object_or_404(
-            Recipe,
-            id=self.kwargs.get('recipe_id'),
-        )
-        user = request.user
+        # recipe = get_object_or_404(
+        #     Recipe,
+        #     id=self.kwargs.get('recipe_id'),
+        # )
+        # user = request.user
+        context = None
         if request.method == 'POST':
-            if Shopping.objects.filter(user=user, recipe=recipe).exists():
-                context = {
-                    'errors': 'Рецепт уже есть в списке покупок'
-                }
-                return Response(
-                    context,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            Shopping.objects.create(user=user, recipe=recipe)
-            serializer = ShortcutRecipeSerializer(recipe)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if request.method == 'DELETE':
-            if Shopping.objects.filter(user=user, recipe=recipe).exists():
-                Shopping.objects.filter(
-                    user=user, recipe=recipe
-                ).delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-            context = {
-                'errors': 'Рецепта нет в списке покупок'
-            }
-            return Response(
-                context,
-                status=status.HTTP_400_BAD_REQUEST
+            context, response_status = create_relation(
+                request=request,
+                model=Recipe,
+                relate_model=Shopping,
+                serializer=ShortcutRecipeSerializer,
+                *args,
+                **kwargs
             )
+            # return Response(context, status=response_status)
+        #     if Shopping.objects.filter(user=user, recipe=recipe).exists():
+        #         context = {
+        #             'errors': 'Рецепт уже есть в списке покупок'
+        #         }
+        #         return Response(
+        #             context,
+        #             status=status.HTTP_400_BAD_REQUEST
+        #         )
+        #     Shopping.objects.create(user=user, recipe=recipe)
+        #     serializer = ShortcutRecipeSerializer(recipe)
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
+        if request.method == 'DELETE':
+            context, response_status = delete_relation(
+                request=request,
+                model=Recipe,
+                relate_model=Shopping,
+                serializer=ShortcutRecipeSerializer,
+                *args,
+                **kwargs
+            )
+            # if Shopping.objects.filter(user=user, recipe=recipe).exists():
+            #     Shopping.objects.filter(
+            #         user=user, recipe=recipe
+            #     ).delete()
+            #     return Response(status=status.HTTP_204_NO_CONTENT)
+            # context = {
+            #     'errors': 'Рецепта нет в списке покупок'
+            # }
+        return Response(context, response_status)
 
     @action(
         methods=['get'],

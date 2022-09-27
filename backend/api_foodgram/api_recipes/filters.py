@@ -7,11 +7,11 @@ from recipes.models import Favorite, Ingredient, Recipe, Shopping
 class RecipeFilter(django_filters.FilterSet):
     tags = django_filters.AllValuesMultipleFilter(
         field_name='tags__slug',
-        lookup_expr='iexact',
+        # lookup_expr='iexact',
     )
     author = django_filters.CharFilter(
         field_name='author__id',
-        lookup_expr='icontains'
+        lookup_expr='iexact'
     )
     is_favorite = django_filters.NumberFilter(
         method='is_favorite_filter',
@@ -28,7 +28,7 @@ class RecipeFilter(django_filters.FilterSet):
         if value == FILTER_FAVORITE_OR_SHOPPING:
             user = self.request.user
             query_relate = Favorite.objects.filter(user=user)
-            queryset = Recipe.objects.filter(
+            queryset = queryset.filter(
                 id__in=query_relate.values_list('recipe',)
             )
         return queryset
@@ -37,7 +37,7 @@ class RecipeFilter(django_filters.FilterSet):
         if value == FILTER_FAVORITE_OR_SHOPPING:
             user = self.request.user
             query_relate = Shopping.objects.filter(user=user)
-            queryset = Recipe.objects.filter(
+            queryset = queryset.filter(
                 id__in=query_relate.values_list('recipe',)
             )
         return queryset

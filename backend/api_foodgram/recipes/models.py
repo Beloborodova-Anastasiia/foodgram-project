@@ -183,6 +183,7 @@ class Favorite(models.Model):
                 name='unique_favorite_recipe',
             )
         ]
+        verbose_name = 'Избранное'
 
 
 class Shopping(models.Model):
@@ -204,3 +205,4 @@ class Shopping(models.Model):
                 name='unique_shoping_recipe',
             )
         ]
+        verbose_name = 'Список покупок'

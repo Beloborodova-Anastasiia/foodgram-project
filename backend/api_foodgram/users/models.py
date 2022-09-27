@@ -44,3 +44,4 @@ class Subscribe(models.Model):
                 name='subscription',
             )
         ]
+        verbose_name = 'Подписки',
