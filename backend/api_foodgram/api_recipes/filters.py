@@ -5,9 +5,9 @@ from recipes.models import Favorite, Ingredient, Recipe, Shopping
 
 
 class RecipeFilter(django_filters.FilterSet):
-    tags = django_filters.CharFilter(
+    tags = django_filters.AllValuesMultipleFilter(
         field_name='tags__slug',
-        lookup_expr='iexact'
+        lookup_expr='iexact',
     )
     author = django_filters.CharFilter(
         field_name='author__id',

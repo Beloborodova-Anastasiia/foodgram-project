@@ -26,23 +26,23 @@ class IngredientViewSet(RetriveListViewSet):
     serializer_class = IngredientSerializer
     filter_backends = (DjangoFilterBackend, filters.SearchFilter)
     filterset_class = IngredientFilter
-    # search_fields = ('^name',)
-    # filterset_fields = ('name',)
+    pagination_class = None
 
 
 class TagViewSet(RetriveListViewSet):
     queryset = Tag.objects.all()
     permission_classes = [IsAuthenticatedOrReadOnly]
     serializer_class = TagSerializer
+    pagination_class = None
 
 
 class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
-    queryset = Recipe.objects.all()
+    queryset = Recipe.objects.all().order_by('-pub_date')
     permission_classes = [AllowAny]
     serializer_class = RecipeSerializer
-    filter_backends = (DjangoFilterBackend,)
+    filter_backends = (DjangoFilterBackend, filters.OrderingFilter)
     filterset_class = RecipeFilter
-    pagination_class = PageNumberPagination
+    ordering_fields = ('pub_date')
 
     @action(
         methods=['post', 'delete'],
