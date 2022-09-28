@@ -6,6 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
+# from rest_framework.pagination import LimitOffsetPagination
 
 from api_foodgram.constants import (FAVORITE_OR_SHOPPING, PASH_SHOPPING_CART,
                                     PATH_DOWNLOAD_SHOPPING_CART, PATH_FAVORITE,
@@ -86,7 +87,7 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
                 request=request,
                 model=Recipe,
                 relate_model=Shopping,
-                serializer=self.serializer_class,
+                serializer=self.get_serializer(),
                 *args,
                 **kwargs
             )

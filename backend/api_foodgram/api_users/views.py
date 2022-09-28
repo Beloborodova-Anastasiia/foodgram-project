@@ -1,9 +1,9 @@
 from djoser.views import UserViewSet
-from rest_framework import mixins, status, viewsets
+from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
+# from rest_framework.pagination import PageNumberPagination
 
 from api_foodgram.constants import (PATH_SUBSCRIBE, PATH_SUBSCRIPTIONS,
                                     SUBSCRIB_IN_PATH)
@@ -22,7 +22,7 @@ class CreateRetrieveListViewSet(mixins.CreateModelMixin,
 
 
 class CustomUserViewSet(UserViewSet):
-    pagination_class = PageNumberPagination
+    # pagination_class = PageNumberPagination
 
     def get_queryset(self):
         if PATH_SUBSCRIPTIONS in self.request.path:
@@ -33,11 +33,10 @@ class CustomUserViewSet(UserViewSet):
             )
         return User.objects.all()
 
-    def get_serializer_class(self, *args, **kwargs):
+    def get_serializer_class(self):
         if SUBSCRIB_IN_PATH in self.request.path:
-            print(self.request.path)
             return SubscribtionSerializer
-        return CustomUserSerializer
+        return super().get_serializer_class()
 
     @action(
         methods=['get', ],
@@ -79,4 +78,4 @@ class CustomUserViewSet(UserViewSet):
                 *args,
                 **kwargs
             )
-        return Response(context, status=status.HTTP_400_BAD_REQUEST)
+        return Response(context, status=response_status)

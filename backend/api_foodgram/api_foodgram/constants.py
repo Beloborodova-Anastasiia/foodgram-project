@@ -13,4 +13,4 @@ PASH_SHOPPING_CART = r'(?P<recipe_id>[0-9]+)/shopping_cart'
 PATH_DOWNLOAD_SHOPPING_CART = 'download_shopping_cart'
 RECIPES_LIMIT_DEFAULT = 3
 SAVE_AS = 'attachment; filename="shopping_cart.csv"'
-SUBSCRIB_IN_PATH = 'subscrib'
+SUBSCRIB_IN_PATH = 'subscr'
