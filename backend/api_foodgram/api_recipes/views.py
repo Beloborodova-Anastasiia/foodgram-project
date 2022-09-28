@@ -6,19 +6,17 @@ from rest_framework.decorators import action
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
-# from rest_framework.pagination import LimitOffsetPagination
 
 from api_foodgram.constants import (FAVORITE_OR_SHOPPING, PASH_SHOPPING_CART,
                                     PATH_DOWNLOAD_SHOPPING_CART, PATH_FAVORITE,
                                     SAVE_AS)
+from api_foodgram.utilits import create_relation, delete_relation
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             Shopping, Tag)
-
 from .filters import IngredientFilter, RecipeFilter
-from .mixins import RetriveListViewSet, RetriveListCreateDeleteUpdateViewSet
+from .mixins import RetriveListCreateDeleteUpdateViewSet, RetriveListViewSet
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           ShortcutRecipeSerializer, TagSerializer)
-from api_foodgram.utilits import create_relation, delete_relation
 
 
 class IngredientViewSet(RetriveListViewSet):

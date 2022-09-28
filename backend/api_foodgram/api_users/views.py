@@ -3,15 +3,12 @@ from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-# from rest_framework.pagination import PageNumberPagination
 
 from api_foodgram.constants import (PATH_SUBSCRIBE, PATH_SUBSCRIPTIONS,
                                     SUBSCRIB_IN_PATH)
+from api_foodgram.utilits import create_relation, delete_relation
 from api_recipes.serializers import SubscribtionSerializer
 from users.models import Subscribe, User
-
-from .serializers import CustomUserSerializer
-from api_foodgram.utilits import create_relation, delete_relation
 
 
 class CreateRetrieveListViewSet(mixins.CreateModelMixin,
@@ -22,7 +19,6 @@ class CreateRetrieveListViewSet(mixins.CreateModelMixin,
 
 
 class CustomUserViewSet(UserViewSet):
-    # pagination_class = PageNumberPagination
 
     def get_queryset(self):
         if PATH_SUBSCRIPTIONS in self.request.path:

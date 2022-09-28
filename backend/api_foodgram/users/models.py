@@ -23,10 +23,11 @@ class User(AbstractUser):
         verbose_name='Last name',
         max_length=150,
     )
-    
+
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+
 
 class Subscribe(models.Model):
     user = models.ForeignKey(
