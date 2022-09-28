@@ -1,4 +1,3 @@
-from django.shortcuts import get_object_or_404
 from djoser.views import UserViewSet
 from rest_framework import mixins, status, viewsets
 from rest_framework.decorators import action
@@ -6,11 +5,13 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 
-from api_foodgram.constants import PATH_SUBSCRIBE, PATH_SUBSCRIPTIONS
+from api_foodgram.constants import (PATH_SUBSCRIBE, PATH_SUBSCRIPTIONS,
+                                    SUBSCRIB_IN_PATH)
 from api_recipes.serializers import SubscribtionSerializer
 from users.models import Subscribe, User
 
 from .serializers import CustomUserSerializer
+from api_foodgram.utilits import create_relation, delete_relation
 
 
 class CreateRetrieveListViewSet(mixins.CreateModelMixin,
@@ -33,8 +34,8 @@ class CustomUserViewSet(UserViewSet):
         return User.objects.all()
 
     def get_serializer_class(self, *args, **kwargs):
-        if (PATH_SUBSCRIPTIONS in self.request.path
-                or PATH_SUBSCRIBE in self.request.path):
+        if SUBSCRIB_IN_PATH in self.request.path:
+            print(self.request.path)
             return SubscribtionSerializer
         return CustomUserSerializer
 
@@ -50,7 +51,6 @@ class CustomUserViewSet(UserViewSet):
         if page is not None:
             serializer = self.get_serializer(page, many=True)
             return self.get_paginated_response(serializer.data)
-
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
 
@@ -61,41 +61,22 @@ class CustomUserViewSet(UserViewSet):
         permission_classes=[IsAuthenticated]
     )
     def subscribe(self, request, *args, **kwargs):
-        author = get_object_or_404(
-            User,
-            id=self.kwargs.get('author_id'),
-        )
-        user = request.user
         if request.method == 'POST':
-            if Subscribe.objects.filter(user=user, author=author).exists():
-                context = {
-                    'errors': 'Вы уже подписаны на этого автора'
-                }
-                return Response(
-                    context,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            if user == author:
-                context = {
-                    'errors': 'Вы не можете подписаться на самого себя'
-                }
-                return Response(
-                    context,
-                    status=status.HTTP_400_BAD_REQUEST
-                )
-            Subscribe.objects.create(user=user, author=author)
-            serializer = self.get_serializer(author)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        if request.method == 'DELETE':
-            if Subscribe.objects.filter(user=user, author=author).exists():
-                Subscribe.objects.filter(
-                    user=user, author=author
-                ).delete()
-                return Response(status=status.HTTP_204_NO_CONTENT)
-            context = {
-                'errors': 'Вы не подписаны на этого автора'
-            }
-            return Response(
-                context,
-                status=status.HTTP_400_BAD_REQUEST
+            context, response_status = create_relation(
+                request=request,
+                model=User,
+                relate_model=Subscribe,
+                serializer=self.get_serializer(),
+                ban_himself=True,
+                *args,
+                **kwargs
             )
+        if request.method == 'DELETE':
+            context, response_status = delete_relation(
+                request=request,
+                model=User,
+                relate_model=Subscribe,
+                *args,
+                **kwargs
+            )
+        return Response(context, status=status.HTTP_400_BAD_REQUEST)

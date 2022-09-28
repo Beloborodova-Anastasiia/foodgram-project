@@ -1,14 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import filters, status
+from rest_framework import filters
 from rest_framework.decorators import action
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
-from rest_framework.pagination import PageNumberPagination
 
-from api_foodgram.constants import (PASH_SHOPPING_CART,
+from api_foodgram.constants import (FAVORITE_OR_SHOPPING, PASH_SHOPPING_CART,
                                     PATH_DOWNLOAD_SHOPPING_CART, PATH_FAVORITE,
                                     SAVE_AS)
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
@@ -18,7 +17,7 @@ from .filters import IngredientFilter, RecipeFilter
 from .mixins import RetriveListViewSet, RetriveListCreateDeleteUpdateViewSet
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           ShortcutRecipeSerializer, TagSerializer)
-from .utilits import create_relation, delete_relation
+from api_foodgram.utilits import create_relation, delete_relation
 
 
 class IngredientViewSet(RetriveListViewSet):
@@ -40,9 +39,14 @@ class TagViewSet(RetriveListViewSet):
 class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
     queryset = Recipe.objects.all().order_by('-pub_date')
     permission_classes = [AllowAny]
-    serializer_class = RecipeSerializer
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
+
+    def get_serializer_class(self, *args, **kwargs):
+        for key in FAVORITE_OR_SHOPPING:
+            if key in self.request.path:
+                return ShortcutRecipeSerializer
+        return RecipeSerializer
 
     @action(
         methods=['post', 'delete'],
@@ -51,29 +55,20 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
         permission_classes=[IsAuthenticated]
     )
     def favorite(self, request, *args, **kwargs):
-        # recipe = get_object_or_404(
-        #     Recipe,
-        #     id=self.kwargs.get('recipe_id'),
-        # )
-        context = None
         if request.method == 'POST':
             context, response_status = create_relation(
                 request=request,
                 model=Recipe,
                 relate_model=Favorite,
-                serializer=ShortcutRecipeSerializer,
+                serializer=self.get_serializer(),
                 *args,
                 **kwargs
             )
-    
-        # user = request.user
-        
         if request.method == 'DELETE':
             context, response_status = delete_relation(
                 request=request,
                 model=Recipe,
                 relate_model=Favorite,
-                serializer=ShortcutRecipeSerializer,
                 *args,
                 **kwargs
             )
@@ -86,33 +81,15 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
         permission_classes=[IsAuthenticated]
     )
     def shopping_cart(self, request, *args, **kwargs):
-        # recipe = get_object_or_404(
-        #     Recipe,
-        #     id=self.kwargs.get('recipe_id'),
-        # )
-        # user = request.user
-        context = None
         if request.method == 'POST':
             context, response_status = create_relation(
                 request=request,
                 model=Recipe,
                 relate_model=Shopping,
-                serializer=ShortcutRecipeSerializer,
+                serializer=self.serializer_class,
                 *args,
                 **kwargs
             )
-            # return Response(context, status=response_status)
-        #     if Shopping.objects.filter(user=user, recipe=recipe).exists():
-        #         context = {
-        #             'errors': 'Рецепт уже есть в списке покупок'
-        #         }
-        #         return Response(
-        #             context,
-        #             status=status.HTTP_400_BAD_REQUEST
-        #         )
-        #     Shopping.objects.create(user=user, recipe=recipe)
-        #     serializer = ShortcutRecipeSerializer(recipe)
-        #     return Response(serializer.data, status=status.HTTP_201_CREATED)
         if request.method == 'DELETE':
             context, response_status = delete_relation(
                 request=request,
@@ -122,14 +99,6 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
                 *args,
                 **kwargs
             )
-            # if Shopping.objects.filter(user=user, recipe=recipe).exists():
-            #     Shopping.objects.filter(
-            #         user=user, recipe=recipe
-            #     ).delete()
-            #     return Response(status=status.HTTP_204_NO_CONTENT)
-            # context = {
-            #     'errors': 'Рецепта нет в списке покупок'
-            # }
         return Response(context, response_status)
 
     @action(

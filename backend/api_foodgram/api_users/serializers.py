@@ -20,6 +20,7 @@ class CustomUserSerializer(UserSerializer):
         read_only_fields = ('is_subscribed',)
 
     def get_is_subscribed(self, obj):
+        print(self.context)
         user = self.context['request'].user
         if user.is_anonymous:
             return False
