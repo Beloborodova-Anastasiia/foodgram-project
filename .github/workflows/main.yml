@@ -45,7 +45,7 @@ jobs:
         with:
           file: backend/api_foodgram/Dockerfile
           push: true
-          tags: abeloborodova/api_foodgram:latest
+          tags: abeloborodova/foodgram:latest
 
   deploy:
     runs-on: ubuntu-latest
