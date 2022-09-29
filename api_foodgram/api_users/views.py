@@ -1,6 +1,3 @@
-from api_foodgram.constants import (PATH_SUBSCRIBE, PATH_SUBSCRIPTIONS,
-                                    SUBSCRIB_IN_PATH)
-from api_foodgram.utilits import create_relation, delete_relation
 from api_recipes.serializers import SubscribtionSerializer
 from djoser.views import UserViewSet
 from rest_framework import mixins, viewsets
@@ -8,6 +5,10 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from users.models import Subscribe, User
+
+from api_foodgram.constants import (PATH_SUBSCRIBE, PATH_SUBSCRIPTIONS,
+                                    SUBSCRIB_IN_PATH)
+from api_foodgram.utilits import create_relation, delete_relation
 
 
 class CreateRetrieveListViewSet(mixins.CreateModelMixin,
