@@ -29,7 +29,7 @@ services:
 
   backend:
     image: abeloborodova/foodgram:latest
-    # build: ../backend/api_foodgram
+    # build: ../api_foodgram
     restart: always
     volumes:
       - static_value:/app/static/
