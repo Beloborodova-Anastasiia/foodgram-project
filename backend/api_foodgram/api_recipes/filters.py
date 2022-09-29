@@ -26,19 +26,13 @@ class RecipeFilter(django_filters.FilterSet):
         if value == FILTER_FAVORITE_OR_SHOPPING:
             user = self.request.user
             query_relate = Favorite.objects.filter(user=user)
-            queryset = queryset.filter(
-                id__in=query_relate.values_list('recipe',)
-            )
-        return queryset
+        return queryset.filter(id__in=query_relate.values_list('recipe',))
 
     def is_in_shopping_cart_filter(self, queryset, name, value):
         if value == FILTER_FAVORITE_OR_SHOPPING:
             user = self.request.user
             query_relate = Shopping.objects.filter(user=user)
-            queryset = queryset.filter(
-                id__in=query_relate.values_list('recipe',)
-            )
-        return queryset
+        return queryset.filter(id__in=query_relate.values_list('recipe',))
 
 
 class IngredientFilter(django_filters.FilterSet):

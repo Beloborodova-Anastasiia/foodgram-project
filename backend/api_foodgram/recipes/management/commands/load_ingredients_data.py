@@ -15,11 +15,10 @@ def check_not_empty_base(class_type):
     if class_type.objects.exists():
         print(f'data in {class_type} already loaded...exiting.')
         print(ALREDY_LOADED_ERROR_MESSAGE)
-        empty_base = False
+        return False
     else:
         print(f'Loading data {class_type}')
-        empty_base = True
-    return empty_base
+        return True
 
 
 class Command(BaseCommand):
