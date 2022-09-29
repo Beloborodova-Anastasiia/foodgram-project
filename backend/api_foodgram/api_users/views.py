@@ -1,7 +1,8 @@
 from djoser.views import UserViewSet
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import (IsAuthenticated, AllowAny,
+                                        IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
 from api_foodgram.constants import (PATH_SUBSCRIBE, PATH_SUBSCRIPTIONS,
@@ -19,6 +20,7 @@ class CreateRetrieveListViewSet(mixins.CreateModelMixin,
 
 
 class CustomUserViewSet(UserViewSet):
+    permission_classes = [AllowAny]
 
     def get_queryset(self):
         if PATH_SUBSCRIPTIONS in self.request.path:

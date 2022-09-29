@@ -160,7 +160,10 @@ DJOSER = {
         'current_user': 'api_users.serializers.CustomUserSerializer',
         'user_create': 'api_users.serializers.CustomUserCreateSerializer',
     },
-
+    'PERMISSIONS': {
+        'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
+        'user_list': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
+    },
 }
 
 
