@@ -1,3 +1,4 @@
+from api_foodgram.constants import RECIPES_LIMIT_DEFAULT
 from api_users.serializers import CustomUserSerializer
 from django.shortcuts import get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
@@ -5,8 +6,6 @@ from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             Shopping, Tag, TagRecipe)
 from rest_framework import serializers
 from users.models import Subscribe, User
-
-from api_foodgram.constants import RECIPES_LIMIT_DEFAULT
 
 from .fields import Base64ImageField
 
