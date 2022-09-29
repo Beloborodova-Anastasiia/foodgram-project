@@ -72,10 +72,16 @@ docker-compose exec web python manage.py createsuperuser
 sudo docker-compose exec web python manage.py createsuperuser
 ```
 
-Сайт администратора проекта доступен по адресу;
+Сайт администратора проекта доступен по адресу:
 
 ```
 http://localhost/admin
+```
+
+Документация проекта доступна по адресуЖ
+
+```
+http://localhost/api/docs/
 ```
 
 ### Примеры запросов к API
