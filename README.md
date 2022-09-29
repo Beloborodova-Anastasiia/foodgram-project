@@ -1,7 +1,7 @@
 # Проект «Продуктовый помощник»
 
-![Workflow status](https://github.com/Beloborodova-Anastasiia/
-foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg)
+![Workflow status](https://github.com/Beloborodova-Anastasiia/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg
+)
 
 ### Описание
 
@@ -23,7 +23,7 @@ IP сервера: http://51.250.82.140/
 Логин администратора: admin
 ```
 ```
-Пароль администратора: ljv3693954
+Пароль администратора: backend33
 ```
 
 ### Как запустить проект локально:
