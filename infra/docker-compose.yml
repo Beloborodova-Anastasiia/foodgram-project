@@ -28,8 +28,8 @@ services:
       - ./.env
 
   backend:
-    # image: abeloborodova/api_yamdb:latest
-    build: ../backend/api_foodgram
+    image: abeloborodova/foodgram:latest
+    # build: ../backend/api_foodgram
     restart: always
     volumes:
       - static_value:/app/static/
