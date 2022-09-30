@@ -43,4 +43,5 @@ class IngredientFilter(django_filters.FilterSet):
     )
 
     def name_filter(self, queryset, name, value):
-        return queryset.filter(name__istartswith=value.lower())
+        value = value.lower()
+        return queryset.filter(name__istartswith=value)
