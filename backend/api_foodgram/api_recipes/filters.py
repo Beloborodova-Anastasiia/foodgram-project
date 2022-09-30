@@ -39,8 +39,7 @@ class RecipeFilter(django_filters.FilterSet):
 
 class IngredientFilter(django_filters.FilterSet):
     name = django_filters.CharFilter(
-        field_name='name',
-        lookup_expr='istartswith'
+        method='name_filter',
     )
 
     class Meta:
@@ -48,3 +47,6 @@ class IngredientFilter(django_filters.FilterSet):
         fields = {
             'name',
         }
+
+    def name_filter(self, queryset, name, value):
+        return queryset.filter(name__istartswith=value.lower())
