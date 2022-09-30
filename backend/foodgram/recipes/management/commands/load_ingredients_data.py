@@ -28,7 +28,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         if check_not_empty_base(Ingredient):
             for row in DictReader(
-                open(PATH_TO_DATA),
+                open(self.PATH_TO_DATA),
                 fieldnames=['name', 'measurement_unit']
             ):
                 ingredient = Ingredient(

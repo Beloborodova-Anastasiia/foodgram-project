@@ -7,7 +7,7 @@ from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
 
-from api_foodgram.utilits import create_relation, delete_relation
+from foodgram.utilits import create_relation, delete_relation
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             Shopping, Tag)
 

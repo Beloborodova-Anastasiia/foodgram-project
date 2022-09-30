@@ -4,8 +4,8 @@ from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from api_foodgram.utilits import create_relation, delete_relation
 from api_recipes.serializers import SubscribtionSerializer
+from foodgram.utilits import create_relation, delete_relation
 from users.models import Subscribe, User
 
 

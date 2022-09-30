@@ -11,4 +11,4 @@ python manage.py migrate
 # python manage.py loaddata fixtures.json
 
 echo "Starting server"
-gunicorn api_foodgram.wsgi:application --bind 0:8000
+gunicorn foodgram.wsgi:application --bind 0:8000
