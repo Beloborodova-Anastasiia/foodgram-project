@@ -1,12 +1,11 @@
-from api_foodgram.constants import (PATH_SUBSCRIBE, PATH_SUBSCRIPTIONS,
-                                    SUBSCRIB_IN_PATH)
-from api_foodgram.utilits import create_relation, delete_relation
-from api_recipes.serializers import SubscribtionSerializer
 from djoser.views import UserViewSet
 from rest_framework import mixins, viewsets
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+
+from api_foodgram.utilits import create_relation, delete_relation
+from api_recipes.serializers import SubscribtionSerializer
 from users.models import Subscribe, User
 
 
@@ -18,10 +17,14 @@ class CreateRetrieveListViewSet(mixins.CreateModelMixin,
 
 
 class CustomUserViewSet(UserViewSet):
+    PATH_SUBSCRIPTIONS = 'subscriptions'
+    PATH_SUBSCRIBE = r'(?P<author_id>[0-9]+)/subscribe'
+    SUBSCRIB_IN_PATH = 'subscr'
+
     permission_classes = [AllowAny]
 
     def get_queryset(self):
-        if PATH_SUBSCRIPTIONS in self.request.path:
+        if self.PATH_SUBSCRIPTIONS in self.request.path:
             user = self.request.user
             subscriptions = Subscribe.objects.filter(user=user)
             return User.objects.filter(
@@ -30,7 +33,7 @@ class CustomUserViewSet(UserViewSet):
         return User.objects.all()
 
     def get_serializer_class(self):
-        if SUBSCRIB_IN_PATH in self.request.path:
+        if self.SUBSCRIB_IN_PATH in self.request.path:
             return SubscribtionSerializer
         return super().get_serializer_class()
 

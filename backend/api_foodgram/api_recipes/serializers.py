@@ -1,10 +1,10 @@
-from api_foodgram.constants import RECIPES_LIMIT_DEFAULT
-from api_users.serializers import CustomUserSerializer
 from django.shortcuts import get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
+from rest_framework import serializers
+
+from api_users.serializers import CustomUserSerializer
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             Shopping, Tag, TagRecipe)
-from rest_framework import serializers
 from users.models import Subscribe, User
 
 from .fields import Base64ImageField
@@ -191,6 +191,8 @@ class ShortcutRecipeSerializer(serializers.ModelSerializer):
 
 
 class SubscribtionSerializer(serializers.ModelSerializer):
+    RECIPES_LIMIT_DEFAULT = 3
+
     is_subscribed = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
@@ -213,7 +215,7 @@ class SubscribtionSerializer(serializers.ModelSerializer):
         try:
             recipes_limit = int(self.context['request'].GET['recipes_limit'])
         except MultiValueDictKeyError:
-            recipes_limit = RECIPES_LIMIT_DEFAULT
+            recipes_limit = self.RECIPES_LIMIT_DEFAULT
         recipes = obj.recipes.all().order_by('-pub_date')[:recipes_limit]
         serializer = ShortcutRecipeSerializer(recipes, many=True)
         return serializer.data

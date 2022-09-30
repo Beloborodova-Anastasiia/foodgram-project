@@ -1,20 +1,20 @@
 from csv import DictReader
 
-from api_foodgram.constants import PATH_TO_DATA
 from django.core.management import BaseCommand
-from recipes.models import Ingredient
 
-ALREDY_LOADED_ERROR_MESSAGE = """
-If you need to reload the child data from the CSV file,
-first delete the db file to destroy the database.
-Then, run `python manage.py migrate` for a new empty
-database with tables"""
+from recipes.models import Ingredient
 
 
 def check_not_empty_base(class_type):
+    alredy_loaded_error_message = """
+        If you need to reload the child data from the CSV file,
+        first delete the db file to destroy the database.
+        Then, run `python manage.py migrate` for a new empty
+        database with tables"""
+
     if class_type.objects.exists():
         print(f'data in {class_type} already loaded...exiting.')
-        print(ALREDY_LOADED_ERROR_MESSAGE)
+        print(alredy_loaded_error_message)
         return False
     else:
         print(f'Loading data {class_type}')
@@ -22,6 +22,7 @@ def check_not_empty_base(class_type):
 
 
 class Command(BaseCommand):
+    PATH_TO_DATA = '/*/foodgram-project-react/data/ingredients.csv'
     help = "Loads data from .csv files"
 
     def handle(self, *args, **options):

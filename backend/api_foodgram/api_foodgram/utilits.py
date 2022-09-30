@@ -1,10 +1,12 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 
-from .constants import ERROR_MESSAGES
-
 
 def create_relation(ban_himself=False, *args, **kwargs):
+    error_messages = {
+        'exists': 'уже есть в',
+        'ban_himself': 'Вы не можете добавить себя в',
+    }
     for key in kwargs.keys():
         if key.__contains__('id'):
             object_id = kwargs.get(key)
@@ -16,7 +18,7 @@ def create_relation(ban_himself=False, *args, **kwargs):
     user = kwargs.get('request').user
     relate_model = kwargs.get('relate_model')
     if ban_himself and user == object:
-        message = ERROR_MESSAGES['ban_himself']
+        message = error_messages['ban_himself']
         context = {
             'errors': (
                 f'{message} {relate_model._meta.verbose_name}'
@@ -30,7 +32,7 @@ def create_relation(ban_himself=False, *args, **kwargs):
     )
 
     if object in queryset:
-        message = ERROR_MESSAGES['exists']
+        message = error_messages['exists']
         context = {
             'errors': (
                 f'{model._meta.verbose_name} '
@@ -49,6 +51,7 @@ def create_relation(ban_himself=False, *args, **kwargs):
 
 
 def delete_relation(**kwargs):
+    error_message = 'нет в'
     for key in kwargs.keys():
         if key.__contains__('id'):
             object_id = kwargs.get(key)
@@ -64,9 +67,8 @@ def delete_relation(**kwargs):
     queryset = model.objects.filter(
         id__in=query_relate.values_list(key)
     )
-    print(query_relate)
     if object not in queryset:
-        message = ERROR_MESSAGES['non_exists']
+        message = error_message['non_exists']
         context = {
             'errors': (
                 f'{model._meta.verbose_name} '

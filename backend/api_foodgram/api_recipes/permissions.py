@@ -16,4 +16,3 @@ class AuthorOrAdmin(permissions.BasePermission):
                 return True
             if request.method not in permissions.SAFE_METHODS:
                 return obj.author == request.user
-        return False

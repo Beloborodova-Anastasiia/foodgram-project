@@ -1,9 +1,11 @@
 import django_filters
-from api_foodgram.constants import FILTER_FAVORITE_OR_SHOPPING
+
 from recipes.models import Favorite, Ingredient, Recipe, Shopping
 
 
 class RecipeFilter(django_filters.FilterSet):
+    FILTER_FAVORITE_OR_SHOPPING = 1
+
     tags = django_filters.AllValuesMultipleFilter(
         field_name='tags__slug',
     )
@@ -23,13 +25,13 @@ class RecipeFilter(django_filters.FilterSet):
         fields = ('author', 'tags')
 
     def is_favorite_filter(self, queryset, name, value):
-        if value == FILTER_FAVORITE_OR_SHOPPING:
+        if value == self.FILTER_FAVORITE_OR_SHOPPING:
             user = self.request.user
             query_relate = Favorite.objects.filter(user=user)
         return queryset.filter(id__in=query_relate.values_list('recipe',))
 
     def is_in_shopping_cart_filter(self, queryset, name, value):
-        if value == FILTER_FAVORITE_OR_SHOPPING:
+        if value == self.FILTER_FAVORITE_OR_SHOPPING:
             user = self.request.user
             query_relate = Shopping.objects.filter(user=user)
         return queryset.filter(id__in=query_relate.values_list('recipe',))

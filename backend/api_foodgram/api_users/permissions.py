@@ -7,6 +7,4 @@ class UserOwner(permissions.BasePermission):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
-        if request.user.is_authenticated:
-            return obj.username == request.user
-        return False
+        return request.user.is_authenticated and obj.username == request.user

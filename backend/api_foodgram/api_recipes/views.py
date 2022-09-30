@@ -1,17 +1,15 @@
-from api_foodgram.constants import (FAVORITE_OR_SHOPPING, PASH_SHOPPING_CART,
-                                    PATH_DOWNLOAD_SHOPPING_CART, PATH_FAVORITE,
-                                    SAVE_AS)
-from api_foodgram.utilits import create_relation, delete_relation
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                            Shopping, Tag)
 from rest_framework import filters
 from rest_framework.decorators import action
 from rest_framework.permissions import (AllowAny, IsAuthenticated,
                                         IsAuthenticatedOrReadOnly)
 from rest_framework.response import Response
+
+from api_foodgram.utilits import create_relation, delete_relation
+from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
+                            Shopping, Tag)
 
 from .filters import IngredientFilter, RecipeFilter
 from .mixins import RetriveListCreateDeleteUpdateViewSet, RetriveListViewSet
@@ -36,13 +34,19 @@ class TagViewSet(RetriveListViewSet):
 
 
 class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
+    FAVORITE_OR_SHOPPING = ['favorite', 'shopping']
+    PASH_SHOPPING_CART = r'(?P<recipe_id>[0-9]+)/shopping_cart'
+    PATH_DOWNLOAD_SHOPPING_CART = 'download_shopping_cart'
+    PATH_FAVORITE = r'(?P<recipe_id>[0-9]+)/favorite'
+    SAVE_AS = 'attachment; filename="shopping_cart.csv"'
+
     queryset = Recipe.objects.all().order_by('-pub_date')
     permission_classes = [AllowAny]
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
 
     def get_serializer_class(self, *args, **kwargs):
-        for key in FAVORITE_OR_SHOPPING:
+        for key in self.FAVORITE_OR_SHOPPING:
             if key in self.request.path:
                 return ShortcutRecipeSerializer
         return RecipeSerializer
@@ -108,7 +112,7 @@ class RecipeViewSet(RetriveListCreateDeleteUpdateViewSet):
     )
     def download_shopping_cart(self, request):
         file_response = HttpResponse(content_type='text/plain')
-        file_response['Content-Disposition'] = SAVE_AS
+        file_response['Content-Disposition'] = self.SAVE_AS
         shopping_obj = Shopping.objects.filter(user=request.user)
         recipes = Recipe.objects.filter(
             id__in=shopping_obj.values_list('recipe',)
