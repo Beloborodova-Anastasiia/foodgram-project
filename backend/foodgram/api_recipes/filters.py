@@ -42,11 +42,5 @@ class IngredientFilter(django_filters.FilterSet):
         method='name_filter',
     )
 
-    class Meta:
-        model = Ingredient
-        fields = {
-            'name',
-        }
-
     def name_filter(self, queryset, name, value):
         return queryset.filter(name__istartswith=value.lower())
