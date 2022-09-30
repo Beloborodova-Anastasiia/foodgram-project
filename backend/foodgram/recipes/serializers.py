@@ -2,12 +2,12 @@ from django.shortcuts import get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from rest_framework import serializers
 
-from api_users.serializers import CustomUserSerializer
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                            Shopping, Tag, TagRecipe)
 from users.models import Subscribe, User
+from users.serializers import CustomUserSerializer
 
 from .fields import Base64ImageField
+from .models import (Favorite, Ingredient, IngredientRecipe, Recipe, Shopping,
+                     Tag, TagRecipe)
 
 
 class IngredientSerializer(serializers.ModelSerializer):

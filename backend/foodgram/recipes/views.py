@@ -8,11 +8,11 @@ from rest_framework.permissions import (AllowAny, IsAuthenticated,
 from rest_framework.response import Response
 
 from foodgram.utilits import create_relation, delete_relation
-from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
-                            Shopping, Tag)
 
 from .filters import IngredientFilter, RecipeFilter
 from .mixins import RetriveListCreateDeleteUpdateViewSet, RetriveListViewSet
+from .models import (Favorite, Ingredient, IngredientRecipe, Recipe, Shopping,
+                     Tag)
 from .serializers import (IngredientSerializer, RecipeSerializer,
                           ShortcutRecipeSerializer, TagSerializer)
 

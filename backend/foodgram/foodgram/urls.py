@@ -6,8 +6,8 @@ from . import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api_users.urls')),
-    path('api/', include('api_recipes.urls')),
+    path('api/', include('users.urls')),
+    path('api/', include('recipes.urls')),
 ]
 
 if settings.DEBUG:

@@ -35,8 +35,6 @@ INSTALLED_APPS = [
     'django_filters',
     'users.apps.UsersConfig',
     'recipes.apps.RecipesConfig',
-    'api_users.apps.ApiUsersConfig',
-    'api_recipes.apps.ApiRecipesConfig',
 ]
 
 MIDDLEWARE = [
@@ -131,9 +129,9 @@ DJOSER = {
     'HIDE_USERS': False,
     'LOGIN_FIELD': 'email',
     'SERIALIZERS': {
-        'user': 'api_users.serializers.CustomUserSerializer',
-        'current_user': 'api_users.serializers.CustomUserSerializer',
-        'user_create': 'api_users.serializers.CustomUserCreateSerializer',
+        'user': 'users.serializers.CustomUserSerializer',
+        'current_user': 'users.serializers.CustomUserSerializer',
+        'user_create': 'users.serializers.CustomUserCreateSerializer',
     },
     'PERMISSIONS': {
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
