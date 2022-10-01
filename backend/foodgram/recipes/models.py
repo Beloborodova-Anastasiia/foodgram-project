@@ -62,6 +62,8 @@ class Tag(models.Model):
 
 
 class Recipe(models.Model):
+    RECIPES_LIMIT_DEFAULT = 3
+
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,

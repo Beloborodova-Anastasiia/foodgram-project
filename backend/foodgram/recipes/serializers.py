@@ -191,7 +191,7 @@ class ShortcutRecipeSerializer(serializers.ModelSerializer):
 
 
 class SubscribtionSerializer(serializers.ModelSerializer):
-    RECIPES_LIMIT_DEFAULT = 3
+    # RECIPES_LIMIT_DEFAULT = 3
 
     is_subscribed = serializers.SerializerMethodField()
     recipes_count = serializers.SerializerMethodField()
@@ -215,7 +215,7 @@ class SubscribtionSerializer(serializers.ModelSerializer):
         try:
             recipes_limit = int(self.context['request'].GET['recipes_limit'])
         except MultiValueDictKeyError:
-            recipes_limit = self.RECIPES_LIMIT_DEFAULT
+            recipes_limit = Recipe.RECIPES_LIMIT_DEFAULT
         recipes = obj.recipes.all().order_by('-pub_date')[:recipes_limit]
         serializer = ShortcutRecipeSerializer(recipes, many=True)
         return serializer.data
