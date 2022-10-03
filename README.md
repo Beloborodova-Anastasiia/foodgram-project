@@ -2,6 +2,19 @@
 
 ![Workflow status](https://github.com/Beloborodova-Anastasiia/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg
 )
+### Данные проекта на сервере
+```
+IP сервера: http://51.250.82.140/
+```
+```
+Логин администратора: admin
+```
+```
+Электронная почта: asd@dsf.sdf
+```
+```
+Пароль администратора: backend33
+```
 
 ### Описание
 
@@ -15,16 +28,6 @@ Django 2.2.19
 
 Docker 20.10.17
 
-### Данные проекта на сервере
-```
-IP сервера: http://51.250.82.140/
-```
-```
-Логин администратора: admin
-```
-```
-Пароль администратора: backend33
-```
 
 ### Как запустить проект локально:
 
