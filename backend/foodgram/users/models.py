@@ -3,7 +3,7 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 
 # from rest_framework.authentication import TokenAuthentication
-# from rest_framework.authtoken.models import Token, TokenProxy
+from rest_framework.authtoken.models import TokenProxy
 
 
 class User(AbstractUser):
@@ -61,9 +61,9 @@ class Subscribe(models.Model):
 #         verbose_name = 'Токен'
 
 
-# class CustomProxyToken(CustomToken, TokenProxy):
-#     class Meta:
-#         verbose_name = 'токен'
+class CustomProxyToken(TokenProxy):
+    class Meta:
+        verbose_name = 'токен'
 
 
 # class CustomTokenAuthentication(TokenAuthentication):

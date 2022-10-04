@@ -4,7 +4,7 @@ from rest_framework.authtoken.models import TokenProxy
 
 from recipes.models import Favorite, Shopping
 
-from .models import Subscribe, User
+from .models import CustomProxyToken, Subscribe, User
 
 
 class SubscribeInline(admin.TabularInline):
@@ -32,3 +32,5 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.unregister(TokenProxy)
+admin.site.register(CustomProxyToken)
+
