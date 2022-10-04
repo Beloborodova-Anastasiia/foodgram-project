@@ -33,4 +33,3 @@ class CustomUserAdmin(UserAdmin):
 admin.site.register(User, CustomUserAdmin)
 admin.site.unregister(TokenProxy)
 admin.site.register(CustomProxyToken)
-
