@@ -185,18 +185,21 @@ class Favorite(models.Model):
             )
         ]
         verbose_name = 'Избранное'
+        verbose_name_plural = 'Избранное'
 
 
 class Shopping(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='user'
+        related_name='user',
+        verbose_name='Пользователь',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='recipes'
+        related_name='recipes',
+        verbose_name='Рецепт',
     )
 
     class Meta:
@@ -207,3 +210,4 @@ class Shopping(models.Model):
             )
         ]
         verbose_name = 'Список покупок'
+        verbose_name_plural = 'Список покупок'

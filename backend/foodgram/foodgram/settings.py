@@ -137,7 +137,7 @@ DJOSER = {
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
         'user_list': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
     },
-    'TOKEN_MODEL': ['users.models.CustomToken'],
+    'TOKEN_MODEL': 'users.models.CustomToken',
 }
 
 
