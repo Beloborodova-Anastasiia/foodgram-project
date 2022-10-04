@@ -1,10 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from rest_framework.authtoken.admin import TokenAdmin
 
 from recipes.models import Favorite, Shopping
 
-from .models import CustomToken, Subscribe, User
+from .models import Subscribe, User
 
 
 class SubscribeInline(admin.TabularInline):
