@@ -1,8 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from recipes.models import Favorite, Shopping
 from rest_framework.authtoken.admin import TokenAdmin
 from rest_framework.authtoken.models import TokenProxy
+
+from recipes.models import Favorite, Shopping
 
 from .models import CustomTokenProxy, Subscribe, User
 
