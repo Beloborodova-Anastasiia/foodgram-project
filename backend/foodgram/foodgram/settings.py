@@ -106,8 +106,7 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticatedOrReadOnly',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.TokenAuthentication',
-        'users.models.CustomTokenAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend'
@@ -138,7 +137,7 @@ DJOSER = {
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
         'user_list': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
     },
-    'TOKEN_MODEL': 'users.models.CustomToken',
+    # 'TOKEN_MODEL': 'users.models.CustomToken',
 }
 
 

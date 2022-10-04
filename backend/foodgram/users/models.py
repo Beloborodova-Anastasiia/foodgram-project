@@ -54,18 +54,18 @@ class Subscribe(models.Model):
         verbose_name = 'Подписки'
 
 
-class CustomToken(Token):
-    class Meta:
-        verbose_name_plural = 'Токены'
-        verbose_name = 'Токен'
+# class CustomToken(Token):
+#     class Meta:
+#         verbose_name_plural = 'Токены'
+#         verbose_name = 'Токен'
 
 
-class CustomProxyToken(CustomToken, TokenProxy):
-    class Meta:
-        verbose_name = 'токен'
+# class CustomProxyToken(CustomToken, TokenProxy):
+#     class Meta:
+#         verbose_name = 'токен'
 
 
-class CustomTokenAuthentication(TokenAuthentication):
+# class CustomTokenAuthentication(TokenAuthentication):
 
-    def get_model(self):
-        return CustomToken
+#     def get_model(self):
+#         return CustomToken
