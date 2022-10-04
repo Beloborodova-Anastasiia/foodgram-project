@@ -55,7 +55,5 @@ class Subscribe(models.Model):
 
 class CustomToken(TokenProxy):
     class Meta:
-        # verbose_name_plural = 'Токены'
-        # verbose_name = 'Токен'
-        verbose_name = _("Токен")
-        verbose_name_plural = _("Токены")
+        verbose_name_plural = 'Токены'
+        verbose_name = 'Токен'

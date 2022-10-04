@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-
+from rest_framework.authtoken.admin import TokenAdmin
 from recipes.models import Favorite, Shopping
 
-from .models import Subscribe, User
+from .models import CustomToken, Subscribe, User
 
 
 class SubscribeInline(admin.TabularInline):
@@ -30,3 +30,4 @@ class CustomUserAdmin(UserAdmin):
 
 
 admin.site.register(User, CustomUserAdmin)
+admin.site.register(CustomToken, TokenAdmin)
