@@ -1,10 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from rest_framework.authtoken.models import TokenProxy
-
+from rest_framework.authtoken.admin import TokenAdmin
 from recipes.models import Favorite, Shopping
 
-from .models import CustomProxyToken, Subscribe, User
+from .models import Subscribe, User, CustomTokenProxy
 
 
 class SubscribeInline(admin.TabularInline):
@@ -32,4 +32,4 @@ class CustomUserAdmin(UserAdmin):
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.unregister(TokenProxy)
-admin.site.register(CustomProxyToken)
+admin.site.register(CustomTokenProxy, TokenAdmin)
