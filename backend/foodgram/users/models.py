@@ -1,8 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
-
-# from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import TokenProxy
 
 
