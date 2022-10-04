@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
+from rest_framework.authtoken.models import Token
 
 
 class User(AbstractUser):
@@ -47,4 +48,11 @@ class Subscribe(models.Model):
                 name='subscription',
             )
         ]
+        verbose_name_plural = 'Подписки'
         verbose_name = 'Подписки'
+
+
+class CustomToken(Token):
+    class Meta:
+        verbose_name_plural = 'Токены'
+        verbose_name = 'Токен'
