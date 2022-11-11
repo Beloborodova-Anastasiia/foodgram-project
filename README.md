@@ -36,11 +36,11 @@ Docker 20.10.17
 Клонировать репозиторий и перейти в него в командной строке:
 
 ```
-git clone git@github.com:Beloborodova-Anastasiia/foodgram-project-react.git
+git clone git@github.com:Beloborodova-Anastasiia/foodgram-project.git
 ```
 
 ```
-cd foodgram-project-react/infra
+cd foodgram-project/infra
 ```
 
 Создать env-файл по следующему шаблону:
