@@ -26,6 +26,8 @@ Python 3.7
 
 Django 2.2.19
 
+Django REST framework 3.12.4
+
 Docker 20.10.17
 
 
@@ -92,7 +94,7 @@ sudo docker-compose exec web python manage.py createsuperuser
 http://localhost/admin
 ```
 
-Документация проекта доступна по адресуЖ
+Документация проекта доступна по адресу:
 
 ```
 http://localhost/api/docs/
