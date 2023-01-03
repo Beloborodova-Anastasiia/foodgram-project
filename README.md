@@ -1,26 +1,20 @@
-# Проект «Продуктовый помощник»
+# Project «Grocery Assistant»
 
 ![Workflow status](https://github.com/Beloborodova-Anastasiia/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg
 )
-### Данные проекта на сервере
+### Server data
 ```
-IP сервера: http://51.250.82.140/
-```
-```
-Логин администратора: admin
-```
-```
-Электронная почта: asd@dsf.sdf
-```
-```
-Пароль администратора: backend33
+IP server: http://51.250.82.140/
 ```
 
-### Описание
 
-Приложение «Продуктовый помощник»: сайт, на котором пользователи могут публиковать рецепты, добавлять чужие рецепты в избранное и подписываться на публикации других авторов. Сервис «Список покупок» позволяет пользователям создавать список продуктов, которые нужно купить для приготовления выбранных блюд.
+### Description
 
-### Технологии
+Grocery Assistant App is a website where users can post recipes, add other people's
+recipes to favorites, subscribe to posts by others authors. Shopping List service
+allows to create shopping list of products that need to buy for cooking selected dishes.
+
+### Technologies
 
 Python 3.7
 
@@ -31,9 +25,9 @@ Django REST framework 3.12.4
 Docker 20.10.17
 
 
-### Как запустить проект локально:
+### Local project run:
 
-Клонировать репозиторий и перейти в него в командной строке:
+Clone a repository and navigate to it on the command line:
 
 ```
 git clone git@github.com:Beloborodova-Anastasiia/foodgram-project.git
@@ -43,7 +37,7 @@ git clone git@github.com:Beloborodova-Anastasiia/foodgram-project.git
 cd foodgram-project/infra
 ```
 
-Создать env-файл по следующему шаблону:
+Create env-file by template:
 
 ```
 MY_KEY='Key django-project'
@@ -55,60 +49,60 @@ DB_HOST=db
 DB_PORT=5432
 ```
 
-Запустить сборку docker-контейнера:
+Run build docker-container:
 
 ```
-для Windows и Mac:
+for Windows and Mac:
 docker-compose up -d --build
 ```
 ```
-дляLinux:
+for Linux:
 sudo docker-compose up -d --build
 ```
 
-Перенести данные в базу данных:
+Move data to database:
 
 ```
-для Windows и Mac:
+for Windows and Mac:
 docker-compose exec web python manage.py loaddata fixtures.json
 ```
 ```
-дляLinux:
+for Linux:
 sudo docker-compose exec web python manage.py loaddata fixtures.json
 ```
 
-При необходимости создать суперюзера следующей командой:
+Create a superuser if necessary:
 
 ```
-для Windows и Mac:
+for Windows and Mac:
 docker-compose exec web python manage.py createsuperuser
 ```
 ```
-дляLinux:
+for Linux:
 sudo docker-compose exec web python manage.py createsuperuser
 ```
 
-Сайт администратора проекта доступен по адресу:
+The project administrator's website is available at:
 
 ```
 http://localhost/admin
 ```
 
-Документация проекта доступна по адресу:
+Project's documentation ia available at:
 
 ```
 http://localhost/api/docs/
 ```
 
-### Примеры запросов к API
+### API request examples
 
-Регистрация нового пользователя:
+New user registration:
 
 ```
 POST: /api/users/
 ```
 ```
-Тело запроса:
+Request body:
 {
   "email": "string",
   "username": "string",
@@ -118,7 +112,7 @@ POST: /api/users/
 }
 ```
 ```
-Ответ:
+Response:
 {
   "email": "string",
   "id": int,
@@ -128,31 +122,31 @@ POST: /api/users/
 }
 ```
 
-Получение токена:
+Get token:
 ```
 POST: /api/auth/token/login/
 ```
 ```
-Тело запроса:
+Request body:
 {
   "password": "string",
   "email": "string"
 }
 ```
 ```
-Ответ:
+Response:
 {
   "auth_token": "string"
 }
 ```
 
-Получение списка всех рецептов:
+Get all recipes list:
 
 ```
 GET: /api/recipes/
 ```
 ```
-Ответ:
+Response:
 {
   "count": 123,
   "next": "http://foodgram.example.org/api/recipes/?page=4",
@@ -195,13 +189,13 @@ GET: /api/recipes/
 }
 ```
 
-Создание нового рецепта:
+Creating a new recipe:
 
 ```
 POST: /api/recipes/
 ```
 ```
-Запрос:
+Request:
 {
   "ingredients": [
     {
@@ -220,7 +214,7 @@ POST: /api/recipes/
 }
 ```
 ```
-Ответ:
+Response:
 {
     "id": 0,
     "tags": [
@@ -256,13 +250,13 @@ POST: /api/recipes/
 }
 ```
 
-Добавление рецепта в список покупок:
+Adding a recipe to the shopping list:
 
 ```
 POST: /api/recipes/{id}/shopping_cart/
 ```
 ```
-Ответ:
+Response:
 {
   "id": 0,
   "name": "string",
@@ -271,6 +265,6 @@ POST: /api/recipes/{id}/shopping_cart/
 }
 ```
 
-### Автор
+### Author
 
-Белобородова Анастасия  beloborodova.anastasiia@yandex.ru
+Anastasiia Beloborodova  beloborodova.anastasiia@yandex.ru
