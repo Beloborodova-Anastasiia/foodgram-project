@@ -16,9 +16,8 @@ def check_not_empty_base(class_type):
         print(f'data in {class_type} already loaded...exiting.')
         print(alredy_loaded_error_message)
         return False
-    else:
-        print(f'Loading data {class_type}')
-        return True
+    print(f'Loading data {class_type}')
+    return True
 
 
 class Command(BaseCommand):
