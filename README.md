@@ -267,4 +267,8 @@ Response:
 
 ### Author
 
-Anastasiia Beloborodova  beloborodova.anastasiia@yandex.ru
+Anastasiia Beloborodova 
+
+beloborodova.anastasiia@yandex.ru
+
+anastasiia.beloborodova@gmail.com
