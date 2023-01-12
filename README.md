@@ -88,7 +88,7 @@ The project administrator's website is available at:
 http://localhost/admin
 ```
 
-Project's documentation ia available at:
+Project's documentation is available at:
 
 ```
 http://localhost/api/docs/
@@ -268,7 +268,5 @@ Response:
 ### Author
 
 Anastasiia Beloborodova 
-
-beloborodova.anastasiia@yandex.ru
 
 anastasiia.beloborodova@gmail.com
