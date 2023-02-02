@@ -4,7 +4,7 @@
 )
 ### Server data
 ```
-IP server: http://51.250.82.140/
+[Link to the project on the server](http://51.250.82.140/)
 ```
 
 
