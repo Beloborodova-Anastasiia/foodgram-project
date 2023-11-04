@@ -2,11 +2,6 @@
 
 ![Workflow status](https://github.com/Beloborodova-Anastasiia/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg
 )
-### Server data
-```
-[Link to the project on the server](http://51.250.82.140/)
-```
-
 
 ### Description
 
