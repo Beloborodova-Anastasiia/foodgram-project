@@ -1,7 +1,5 @@
 # Project «Grocery Assistant»
 
-![Workflow status](https://github.com/Beloborodova-Anastasiia/foodgram-project-react/actions/workflows/foodgram_workflow.yml/badge.svg
-)
 
 ### Description
 
